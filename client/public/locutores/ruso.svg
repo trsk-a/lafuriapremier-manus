@@ -1,0 +1,11 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="#d50000"/>
+  <circle cx="150" cy="120" r="40" fill="#fafafa"/>
+  <circle cx="135" cy="110" r="5" fill="#1a1a1a"/>
+  <circle cx="165" cy="110" r="5" fill="#1a1a1a"/>
+  <path d="M 130 130 Q 150 140 170 130" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+  <rect x="120" y="160" width="60" height="80" fill="#fafafa"/>
+  <text x="150" y="260" text-anchor="middle" fill="#fafafa" font-family="Arial" font-size="14" font-weight="bold">EL RUSO</text>
+  <text x="150" y="280" text-anchor="middle" fill="#fafafa" font-family="Arial" font-size="12">Bruno Domínguez</text>
+  <text x="150" y="295" text-anchor="middle" fill="#fafafa" font-family="Arial" font-size="10">🔥 ¡Esto es Premier!</text>
+</svg>
