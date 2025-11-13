@@ -164,8 +164,6 @@ export function CyberFooter() {
         </div>
       </div>
 
-      {/* Bottom decorative line */}
-      <div className="h-1 bg-gradient-to-r from-primary via-secondary to-accent" />
-    </footer>
+      {/* Bottom decorative line */}          <div className="h-1 bg-gradient-to-r from-primary via-secondary to-accent" />  </footer>
   );
 }

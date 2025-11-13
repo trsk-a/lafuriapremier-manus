@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, TrendingUp, Users, Target } from "lucide-react";
 
 export default function Home() {
-  const { data: nextMatch, isLoading: matchLoading } = trpc.matches.nextMatch.useQuery();
+  const { data: todaysMatches, isLoading: matchLoading } = trpc.matches.todaysMatches.useQuery();
   const { data: articles, isLoading: articlesLoading } = trpc.articles.list.useQuery({
     limit: 6,
   });
@@ -49,7 +49,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section - Match */}
-        <MatchHero match={nextMatch ?? null} isLoading={matchLoading} />
+        <MatchHero matches={todaysMatches ?? null} isLoading={matchLoading} />
 
         {/* Locutores Section */}
         <section className="py-16 bg-gradient-to-b from-background to-muted/30">

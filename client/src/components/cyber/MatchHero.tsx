@@ -1,21 +1,65 @@
 import { Link } from "wouter";
-import { Clock, Calendar } from "lucide-react";
+import { Clock, Calendar, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Match } from "@shared/types";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 interface MatchHeroProps {
-  match: Match | null;
+  matches?: Match[] | null;
   isLoading?: boolean;
 }
 
-export function MatchHero({ match, isLoading }: MatchHeroProps) {
+export function MatchHero({ matches, isLoading }: MatchHeroProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+
+  const matchList = Array.isArray(matches) ? matches : matches ? [matches] : [];
+  const hasMultipleMatches = matchList.length > 1;
+
+  // Auto-advance carousel
+  useEffect(() => {
+    if (!autoplay || !hasMultipleMatches) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % matchList.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [autoplay, hasMultipleMatches, matchList.length]);
+
+  const nextMatch = () => {
+    setAutoplay(false);
+    setCurrentIndex((prev) => (prev + 1) % matchList.length);
+  };
+
+  const prevMatch = () => {
+    setAutoplay(false);
+    setCurrentIndex((prev) => (prev - 1 + matchList.length) % matchList.length);
+  };
+
   if (isLoading) {
     return (
-      <div className="relative overflow-hidden bg-gradient-to-br from-card via-muted to-card border-y border-border">
-        <div className="cyber-scan-lines absolute inset-0 opacity-30" />
-        <div className="container py-12 relative z-10">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-pulse text-muted-foreground font-heading text-xl">
-              CARGANDO DATOS...
+      <div className="container py-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="h-48 bg-gradient-to-r from-primary/20 to-primary/10 rounded-2xl animate-pulse border border-primary/20" />
+        </div>
+      </div>
+    );
+  }
+
+  if (matchList.length === 0) {
+    return (
+      <div className="container py-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl border border-primary/30 shadow-2xl">
+            <div className="cyber-scan-lines absolute inset-0 opacity-20" />
+            <div className="relative z-10 p-12 text-center">
+              <h3 className="font-heading text-2xl text-primary-foreground mb-2">
+                NO HAY PARTIDOS PROGRAMADOS
+              </h3>
+              <p className="text-primary-foreground/80">
+                Vuelve pronto para ver los próximos encuentros de la Premier League
+              </p>
             </div>
           </div>
         </div>
@@ -23,33 +67,18 @@ export function MatchHero({ match, isLoading }: MatchHeroProps) {
     );
   }
 
-  if (!match) {
-    return (
-      <div className="relative overflow-hidden bg-gradient-to-br from-card via-muted to-card border-y border-border">
-        <div className="cyber-scan-lines absolute inset-0 opacity-30" />
-        <div className="container py-12 relative z-10">
-          <div className="text-center">
-            <p className="text-muted-foreground font-heading text-lg">
-              No hay partidos programados en este momento
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const currentMatch = matchList[currentIndex];
+  const isLive = ['1H', '2H', 'HT', 'ET', 'P', 'LIVE'].includes(currentMatch.fixture.status.short);
+  const isFinished = currentMatch.fixture.status.short === 'FT';
+  const isUpcoming = currentMatch.fixture.status.short === 'NS';
 
-  const isLive = ['1H', '2H', 'HT', 'ET', 'P', 'LIVE'].includes(match.fixture.status.short);
-  const isFinished = match.fixture.status.short === 'FT';
-  const isUpcoming = match.fixture.status.short === 'NS';
+  const homeScore = currentMatch.goals.home ?? 0;
+  const awayScore = currentMatch.goals.away ?? 0;
 
-  const homeScore = match.goals.home ?? 0;
-  const awayScore = match.goals.away ?? 0;
-
-  const matchDate = new Date(match.fixture.date);
+  const matchDate = new Date(currentMatch.fixture.date);
   const formattedDate = matchDate.toLocaleDateString('es-ES', { 
     day: 'numeric', 
-    month: 'long', 
-    year: 'numeric' 
+    month: 'short',
   });
   const formattedTime = matchDate.toLocaleTimeString('es-ES', { 
     hour: '2-digit', 
@@ -61,147 +90,169 @@ export function MatchHero({ match, isLoading }: MatchHeroProps) {
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-card via-muted to-card border-y border-border">
-      {/* Scan lines effect */}
-      <div className="cyber-scan-lines absolute inset-0 opacity-30" />
-      
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5" />
-      
-      <div className="container py-12 relative z-10">
-        {/* Status Badge */}
-        <div className="flex justify-center mb-6">
-          <div className="flex items-center gap-4">
-            {isLive && (
-              <div className="flex items-center gap-2 px-4 py-2 bg-primary/20 border border-primary rounded-full">
-                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                <span className="font-heading text-sm tracking-wide text-primary">
-                  EN VIVO
-                </span>
-              </div>
-            )}
-            <div className="px-4 py-2 bg-muted/50 border border-border rounded-full">
-              <span className="font-heading text-sm tracking-wide text-foreground">
-                {match.league.name}
+    <div className="container py-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl border border-primary/30 shadow-2xl">
+          {/* Scan lines effect */}
+          <div className="cyber-scan-lines absolute inset-0 opacity-20" />
+          
+          {/* Live indicator */}
+          {isLive && (
+            <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-background/90 backdrop-blur-sm rounded-full border border-secondary">
+              <div className="w-2 h-2 bg-secondary rounded-full animate-pulse" />
+              <span className="font-heading text-sm tracking-wide text-secondary">
+                EN VIVO
               </span>
             </div>
-            {match.league.round && (
-              <div className="px-4 py-2 bg-muted/50 border border-border rounded-full">
-                <span className="font-heading text-sm tracking-wide text-muted-foreground">
-                  {match.league.round}
-                </span>
+          )}
+
+          {/* Carousel controls */}
+          {hasMultipleMatches && (
+            <>
+              <button
+                onClick={prevMatch}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center bg-background/90 backdrop-blur-sm rounded-full border border-border hover:border-primary transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5 text-foreground" />
+              </button>
+              <button
+                onClick={nextMatch}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center bg-background/90 backdrop-blur-sm rounded-full border border-border hover:border-primary transition-colors"
+              >
+                <ChevronRight className="w-5 h-5 text-foreground" />
+              </button>
+            </>
+          )}
+
+          {/* Match content */}
+          <div className="relative z-10 p-8">
+            <div className="grid grid-cols-[1fr_auto_1fr] gap-8 items-center">
+              {/* Home Team */}
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-20 h-20 md:w-24 md:h-24 bg-background/20 backdrop-blur-sm rounded-full p-3 border border-primary-foreground/20">
+                  <img
+                    src={getTeamLogo(currentMatch.teams.home.id)}
+                    alt={currentMatch.teams.home.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = currentMatch.teams.home.logo;
+                    }}
+                  />
+                </div>
+                <h3 className="font-heading text-lg md:text-xl text-primary-foreground text-center">
+                  {currentMatch.teams.home.name}
+                </h3>
+              </div>
+
+              {/* Score / Time */}
+              <div className="flex flex-col items-center gap-3 min-w-[120px]">
+                {isUpcoming ? (
+                  <>
+                    <div className="flex items-center gap-2 text-primary-foreground/90">
+                      <Calendar className="w-5 h-5" />
+                      <span className="font-heading text-sm">{formattedDate}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-6 h-6 text-primary-foreground" />
+                      <span className="font-mono-cyber text-3xl font-bold text-primary-foreground">
+                        {formattedTime}
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono-cyber text-5xl md:text-6xl font-bold text-primary-foreground">
+                        {homeScore}
+                      </span>
+                      <span className="font-mono-cyber text-3xl font-bold text-primary-foreground/60">
+                        -
+                      </span>
+                      <span className="font-mono-cyber text-5xl md:text-6xl font-bold text-primary-foreground">
+                        {awayScore}
+                      </span>
+                    </div>
+                    {isLive && currentMatch.fixture.status.elapsed && (
+                      <div className="flex items-center gap-2 px-3 py-1 bg-secondary/20 backdrop-blur-sm border border-secondary rounded-full">
+                        <Clock className="w-4 h-4 text-secondary" />
+                        <span className="font-mono-cyber text-sm font-bold text-secondary">
+                          {currentMatch.fixture.status.elapsed}'
+                        </span>
+                      </div>
+                    )}
+                    {isFinished && (
+                      <span className="font-heading text-sm text-primary-foreground/70 tracking-wide">
+                        FINALIZADO
+                      </span>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Away Team */}
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-20 h-20 md:w-24 md:h-24 bg-background/20 backdrop-blur-sm rounded-full p-3 border border-primary-foreground/20">
+                  <img
+                    src={getTeamLogo(currentMatch.teams.away.id)}
+                    alt={currentMatch.teams.away.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = currentMatch.teams.away.logo;
+                    }}
+                  />
+                </div>
+                <h3 className="font-heading text-lg md:text-xl text-primary-foreground text-center">
+                  {currentMatch.teams.away.name}
+                </h3>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="flex justify-center mt-6">
+              <Link href={`/partido/${currentMatch.fixture.id}`}>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-background/90 backdrop-blur-sm border-primary-foreground/30 hover:bg-background hover:border-primary-foreground text-foreground font-heading tracking-wide"
+                >
+                  <Eye className="w-5 h-5 mr-2" />
+                  VER DETALLES DEL PARTIDO
+                </Button>
+              </Link>
+            </div>
+
+            {/* Match info */}
+            {currentMatch.fixture.venue.name && (
+              <div className="text-center mt-4 text-sm text-primary-foreground/70">
+                <span>{currentMatch.fixture.venue.name}</span>
+                {currentMatch.fixture.venue.city && (
+                  <span> • {currentMatch.fixture.venue.city}</span>
+                )}
               </div>
             )}
           </div>
-        </div>
 
-        {/* Match Info */}
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-[1fr_auto_1fr] gap-8 items-center">
-            {/* Home Team */}
-            <div className="flex flex-col items-end gap-4">
-              <img
-                src={getTeamLogo(match.teams.home.id)}
-                alt={match.teams.home.name}
-                className="w-24 h-24 md:w-32 md:h-32 object-contain"
-                onError={(e) => {
-                  e.currentTarget.src = match.teams.home.logo;
-                }}
-              />
-              <h2 className="font-heading text-2xl md:text-4xl text-foreground text-right">
-                {match.teams.home.name}
-              </h2>
-            </div>
-
-            {/* Score / Time */}
-            <div className="flex flex-col items-center gap-4">
-              {isUpcoming ? (
-                <div className="text-center">
-                  <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                    <Calendar className="w-5 h-5" />
-                    <span className="text-sm">{formattedDate}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-foreground">
-                    <Clock className="w-6 h-6" />
-                    <span className="font-mono-cyber text-3xl font-bold">
-                      {formattedTime}
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-6">
-                    <div className="font-mono-cyber text-6xl md:text-8xl font-bold text-foreground cyber-text-glow">
-                      {homeScore}
-                    </div>
-                    <div className="font-mono-cyber text-4xl md:text-6xl font-bold text-muted-foreground">
-                      -
-                    </div>
-                    <div className="font-mono-cyber text-6xl md:text-8xl font-bold text-foreground cyber-text-glow">
-                      {awayScore}
-                    </div>
-                  </div>
-                  {isLive && match.fixture.status.elapsed && (
-                    <div className="flex items-center gap-2 px-4 py-2 bg-secondary/20 border border-secondary rounded-full">
-                      <Clock className="w-4 h-4 text-secondary" />
-                      <span className="font-mono-cyber text-lg font-bold text-secondary">
-                        {match.fixture.status.elapsed}'
-                      </span>
-                    </div>
-                  )}
-                  {isFinished && (
-                    <div className="px-4 py-2 bg-muted border border-border rounded-full">
-                      <span className="font-heading text-sm tracking-wide text-muted-foreground">
-                        FINALIZADO
-                      </span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* Away Team */}
-            <div className="flex flex-col items-start gap-4">
-              <img
-                src={getTeamLogo(match.teams.away.id)}
-                alt={match.teams.away.name}
-                className="w-24 h-24 md:w-32 md:h-32 object-contain"
-                onError={(e) => {
-                  e.currentTarget.src = match.teams.away.logo;
-                }}
-              />
-              <h2 className="font-heading text-2xl md:text-4xl text-foreground text-left">
-                {match.teams.away.name}
-              </h2>
-            </div>
-          </div>
-
-          {/* CTA */}
-          {!isUpcoming && (
-            <div className="flex justify-center mt-8">
-              <Link href={`/partido/${match.fixture.id}`}>
-                <a className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-heading tracking-wide rounded-lg transition-all cyber-glow-red">
-                  VER DETALLES DEL PARTIDO
-                  <span className="text-xl">→</span>
-                </a>
-              </Link>
+          {/* Carousel indicators */}
+          {hasMultipleMatches && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+              {matchList.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setAutoplay(false);
+                    setCurrentIndex(index);
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === currentIndex
+                      ? 'bg-primary-foreground w-6'
+                      : 'bg-primary-foreground/40 hover:bg-primary-foreground/60'
+                  }`}
+                />
+              ))}
             </div>
           )}
         </div>
-
-        {/* Venue Info */}
-        {match.fixture.venue.name && (
-          <div className="text-center mt-8 text-sm text-muted-foreground">
-            <span>{match.fixture.venue.name}</span>
-            {match.fixture.venue.city && (
-              <span> • {match.fixture.venue.city}</span>
-            )}
-          </div>
-        )}
       </div>
-
-      {/* Bottom decorative line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
     </div>
   );
 }

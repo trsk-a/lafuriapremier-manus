@@ -82,3 +82,13 @@
 - [x] Alineaciones de partidos no se cargan (endpoint implementado)
 - [x] Sistema de suscripciones funcional (backend listo, falta UI)
 - [ ] Newsletter implementada y funcional
+
+## Ajustes de Diseño Solicitados
+- [x] Cambiar paleta de colores: quitar fucsia/magenta, agregar anaranjado
+- [x] Mantener azul cyan actual (no usar azul dato del manual)
+- [x] Actualizar todos los componentes con la nueva paleta
+
+## Mejoras de UI Solicitadas
+- [x] Rediseñar MatchHero como banner rojo compacto (estilo card)
+- [x] Implementar carrusel cuando haya múltiples partidos
+- [x] Mantener diseño horizontal con logos, marcador y fecha
