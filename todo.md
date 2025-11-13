@@ -92,3 +92,10 @@
 - [x] Rediseñar MatchHero como banner rojo compacto (estilo card)
 - [x] Implementar carrusel cuando haya múltiples partidos
 - [x] Mantener diseño horizontal con logos, marcador y fecha
+
+## Desarrollo de Página de Jornadas
+- [x] Crear página de jornadas con selector de jornada
+- [x] Mostrar todos los partidos de la jornada seleccionada
+- [x] Diseño de tarjetas de partido con estado (próximo/en vivo/finalizado)
+- [x] Navegación entre jornadas (anterior/siguiente)
+- [x] Indicador visual de jornada actual
