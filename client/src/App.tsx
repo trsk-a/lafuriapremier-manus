@@ -6,12 +6,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Jornadas from "./pages/Jornadas";
+import MatchDetail from "./pages/MatchDetail";
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/jornadas"} component={Jornadas} />
+      <Route path={"/partido/:id"} component={MatchDetail} />
       <Route path={"/404"} component={NotFound} />
       {/* TODO: Add more routes here */}
       <Route component={NotFound} />

@@ -99,3 +99,13 @@
 - [x] Diseño de tarjetas de partido con estado (próximo/en vivo/finalizado)
 - [x] Navegación entre jornadas (anterior/siguiente)
 - [x] Indicador visual de jornada actual
+
+## Desarrollo de Página de Detalle de Partido
+- [x] Crear página de partido individual (/partido/[id])
+- [x] Implementar tabs de navegación (Resumen/Eventos/Alineaciones/Estadísticas)
+- [x] Tab Resumen: marcador, estado, venue, árbitro
+- [x] Tab Eventos: timeline de goles, tarjetas, sustituciones en tiempo real
+- [x] Tab Alineaciones: formación visual con posiciones de jugadores
+- [x] Tab Estadísticas: gráficos comparativos HUD (posesión, tiros, pases, etc.)
+- [x] Diseño cyberpunk con efectos visuales
+- [x] Actualización automática para partidos en vivo
