@@ -11,8 +11,8 @@
 - [x] Extender schema de usuarios con campos de suscripción
 - [x] Crear tabla de suscripciones (FREE/PRO/PREMIUM)
 - [x] Implementar middleware de protección de rutas por tier
-- [ ] Crear página de planes y precios
-- [ ] Implementar sistema de upgrade/downgrade
+- [x] Crear página de planes y precios
+- [x] Implementar sistema de upgrade/downgrade
 
 ## Fase 3: Integración API-Football
 - [x] Configurar variables de entorno para API-Football
@@ -109,3 +109,13 @@
 - [x] Tab Estadísticas: gráficos comparativos HUD (posesión, tiros, pases, etc.)
 - [x] Diseño cyberpunk con efectos visuales
 - [x] Actualización automática para partidos en vivo
+
+## Desarrollo de Planes y Precios (Fase 2)
+- [x] Crear página de planes (/planes) con diseño cyberpunk
+- [x] Mostrar 3 tiers: FREE, PRO, PREMIUM con características diferenciadas
+- [x] Implementar procedimiento tRPC para upgrade de suscripción
+- [x] Implementar procedimiento tRPC para downgrade de suscripción
+- [x] Agregar validación de tier actual vs tier solicitado
+- [x] Crear componente de confirmación de cambio de plan
+- [x] Actualizar header para mostrar plan actual del usuario
+- [x] Agregar badges de contenido premium en secciones restringidas

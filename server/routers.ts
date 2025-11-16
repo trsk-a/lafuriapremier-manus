@@ -5,6 +5,10 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as apiFootball from "./lib/apiFootball";
 import * as db from "./db";
+import { TRPCError } from '@trpc/server';
+import { getDb } from './db';
+import { users } from '../drizzle/schema';
+import { eq } from 'drizzle-orm';
 
 export const appRouter = router({
   system: systemRouter,
@@ -240,6 +244,46 @@ export const appRouter = router({
 
   // ── User Subscription ─────────────────────────────────────
   subscription: router({
+    upgrade: protectedProcedure
+      .input(z.object({ newTier: z.enum(['FREE', 'PRO', 'PREMIUM']) }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
+        const currentTier = ctx.user.subscriptionTier || 'FREE';
+        const tierOrder: Record<string, number> = { FREE: 0, PRO: 1, PREMIUM: 2 };
+
+        if (tierOrder[input.newTier] <= tierOrder[currentTier]) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'El nuevo plan debe ser superior al actual' });
+        }
+
+        await database.update(users)
+          .set({ subscriptionTier: input.newTier, updatedAt: new Date() })
+          .where(eq(users.id, ctx.user.id));
+
+        return { success: true, newTier: input.newTier };
+      }),
+    
+    downgrade: protectedProcedure
+      .input(z.object({ newTier: z.enum(['FREE', 'PRO', 'PREMIUM']) }))
+      .mutation(async ({ ctx, input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
+        const currentTier = ctx.user.subscriptionTier || 'FREE';
+        const tierOrder: Record<string, number> = { FREE: 0, PRO: 1, PREMIUM: 2 };
+
+        if (tierOrder[input.newTier] >= tierOrder[currentTier]) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'El nuevo plan debe ser inferior al actual' });
+        }
+
+        await database.update(users)
+          .set({ subscriptionTier: input.newTier, updatedAt: new Date() })
+          .where(eq(users.id, ctx.user.id));
+
+        return { success: true, newTier: input.newTier };
+      }),
+
     updateTier: protectedProcedure
       .input(
         z.object({
@@ -247,8 +291,13 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input, ctx }) => {
-        // This would integrate with Stripe in production
-        // For now, just a placeholder
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+
+        await database.update(users)
+          .set({ subscriptionTier: input.tier, updatedAt: new Date() })
+          .where(eq(users.id, ctx.user.id));
+
         return { success: true, tier: input.tier };
       }),
   }),

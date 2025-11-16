@@ -22,6 +22,7 @@ export function CyberHeader() {
     { label: "JUGADORES", href: "/jugadores" },
     { label: "RUMORES", href: "/rumores" },
     { label: "FICHAJES", href: "/fichajes" },
+    { label: "PLANES", href: "/planes" },
   ];
 
   const premiumNavItems = [

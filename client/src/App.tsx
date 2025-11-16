@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Jornadas from "./pages/Jornadas";
 import MatchDetail from "./pages/MatchDetail";
+import Planes from "./pages/Planes";
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/jornadas"} component={Jornadas} />
       <Route path={"/partido/:id"} component={MatchDetail} />
+      <Route path={"/planes"} component={Planes} />
       <Route path={"/404"} component={NotFound} />
       {/* TODO: Add more routes here */}
       <Route component={NotFound} />
