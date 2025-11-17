@@ -14,7 +14,7 @@ export function CyberFooter() {
     premium: [
       { label: "Radar Latino", href: "/radar-latino" },
       { label: "Talento Ibérico", href: "/talento-iberico" },
-      { label: "Análisis Táctico", href: "/analisis" },
+      { label: "Análisis Táctico", href: "/analisis-tactico" },
       { label: "Planes", href: "/planes" },
     ],
     locutor: [
