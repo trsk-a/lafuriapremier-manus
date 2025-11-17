@@ -34,7 +34,7 @@
 ## Fase 5: Contenido Premium
 - [x] Página de Radar Latino (PRO+)
 - [x] Página de Talento Ibérico (PRO+)
-- [ ] Página de detalle de jugador con stats avanzadas (PRO+)
+- [x] Página de detalle de jugador con stats avanzadas (PRO+)
 - [ ] Sección de análisis táctico premium (PRO+)
 - [ ] Contenido exclusivo PREMIUM
 
@@ -164,3 +164,14 @@
 - [x] Paginación o scroll infinito
 - [x] Integración con datos de API-Football
 - [x] Link a perfil detallado de cada jugador
+
+## Desarrollo de Perfil de Jugador
+- [x] Crear página de perfil de jugador (/jugador/[id]) con diseño cyberpunk
+- [x] Header con foto, nombre, equipo, posición, rating
+- [x] Sección de estadísticas generales (goles, asistencias, minutos, tarjetas)
+- [x] Gráfico de rendimiento temporal (rating por jornada)
+- [x] Estadísticas avanzadas (tiros, pases, duelos, regates)
+- [x] Historial de partidos recientes con rendimiento
+- [x] Información personal (edad, nacionalidad, altura, peso, pie preferido)
+- [x] Valor de mercado y evolución
+- [x] Integración con datos de API-Football

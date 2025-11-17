@@ -13,6 +13,7 @@ import Fichajes from "./pages/Fichajes";
 import RadarLatino from "./pages/RadarLatino";
 import TalentoIberico from "./pages/TalentoIberico";
 import Jugadores from "./pages/Jugadores";
+import PlayerProfile from "./pages/PlayerProfile";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path={"/radar-latino"} component={RadarLatino} />
       <Route path={"/talento-iberico"} component={TalentoIberico} />
       <Route path={"/jugadores"} component={Jugadores} />
+      <Route path={"/jugador/:id"} component={PlayerProfile} />
       <Route path={"/404"} component={NotFound} />
       {/* TODO: Add more routes here */}
       <Route component={NotFound} />
