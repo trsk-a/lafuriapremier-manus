@@ -14,7 +14,9 @@ import {
 
 export default function AdminDashboard() {
   // Fetch stats from backend
-  const { data: articles } = trpc.articles.list.useQuery({});
+  // TODO: Migrar a usar content.noticias en lugar de articles
+  // const { data: articles } = trpc.articles.list.useQuery({});
+  const articles: any[] = [];
   const { data: subscribers } = trpc.newsletter.subscribers.useQuery();
 
   const stats = [

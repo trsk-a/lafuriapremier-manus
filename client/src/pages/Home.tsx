@@ -14,9 +14,10 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { data: todaysMatches, isLoading: matchLoading } = trpc.matches.todaysMatches.useQuery();
-  const { data: articles, isLoading: articlesLoading } = trpc.articles.list.useQuery({
-    limit: 6,
-  });
+  // TODO: Migrar a usar content.noticias en lugar de articles
+  // const { data: articles } = trpc.articles.list.useQuery({ limit: 6 });
+  const articles: any[] = [];
+  const articlesLoading = false;
   
   const subscribeNewsletter = trpc.newsletter.subscribe.useMutation({
     onSuccess: () => {

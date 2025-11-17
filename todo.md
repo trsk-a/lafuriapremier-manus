@@ -308,3 +308,41 @@
 - Solo el contenido con `status='published'` se mostrará en las páginas públicas
 - Los administradores pueden editar el contenido antes de aprobarlo
 - El sistema registra quién y cuándo moderó cada pieza de contenido
+
+
+## FASE 7 EN DESARROLLO: Componentes Visuales Cyberpunk
+
+### Componentes Base y Efectos Visuales
+- [x] Crear componente GlitchText con efecto de glitch animado
+- [x] Crear componente NeonBorder con efectos de neón pulsante
+- [x] Crear componente ScanLines para overlay de líneas de escaneo
+- [x] Crear componente CyberGrid con grid futurista de fondo
+- [ ] Agregar utilidades CSS para efectos cyberpunk reutilizables
+
+### Animaciones y Efectos Neón
+- [x] Implementar animación de glitch en títulos principales
+- [x] Crear efecto de neón pulsante en bordes de tarjetas
+- [x] Implementar efecto de "data stream" en fondos
+- [x] Crear animación de "hologram flicker" para imágenes
+- [x] Agregar efecto de "scan line" en secciones importantes
+
+### Tarjetas Estilo Greg Capullo
+- [x] Crear PlayerCard con diseño dramático y sombras intensas
+- [ ] Crear NewsCard con composición dinámica y contraste alto
+- [ ] Crear RumorCard con efectos de urgencia visual
+- [ ] Crear MatchCard con diseño épico y energético
+- [ ] Implementar sistema de badges y etiquetas visuales
+
+### Componentes HUD y Estadísticas
+- [x] Crear StatsHUD con visualización tipo interfaz de videojuego
+- [ ] Crear ProgressBar con efectos neón y animaciones
+- [ ] Crear RadarChart cyberpunk para estadísticas de jugadores
+- [ ] Crear Timeline con diseño futurista para eventos de partido
+- [ ] Crear MetricDisplay con números animados y efectos
+
+### Integración en Páginas
+- [ ] Actualizar Home con nuevos componentes visuales
+- [ ] Actualizar página de Partido con componentes HUD
+- [ ] Actualizar página de Jugador con PlayerCard mejorada
+- [ ] Actualizar página de Rumores con efectos visuales
+- [ ] Actualizar página de Jornadas con diseño mejorado

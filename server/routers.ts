@@ -94,7 +94,8 @@ export const appRouter = router({
   }),
 
   // ── Articles ──────────────────────────────────────────────
-  articles: router({
+  // TODO: Migrar a usar tabla 'noticias' de Supabase en lugar de 'articles'
+  /* articles: router({
     list: publicProcedure
       .input(
         z.object({
@@ -171,7 +172,7 @@ export const appRouter = router({
 
         return { success: true };
       }),
-  }),
+  }), */
 
   // ── Players ───────────────────────────────────────────────
   players: router({
