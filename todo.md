@@ -26,10 +26,10 @@
 - [x] Homepage con hero de partido en vivo
 - [x] Sección de locutores (Ruso, Inge, Míster)
 - [x] Feed de noticias con diseño cyberpunk
-- [ ] Página de partido en vivo con tabs (eventos/lineups/stats)
-- [ ] Página de jornadas con calendario
-- [ ] Página de rumores
-- [ ] Página de fichajes
+- [x] Página de partido en vivo con tabs (eventos/lineups/stats)
+- [x] Página de jornadas con calendario
+- [x] Página de rumores
+- [x] Página de fichajes
 
 ## Fase 5: Contenido Premium
 - [ ] Página de Radar Latino (PRO+)
@@ -119,3 +119,11 @@
 - [x] Crear componente de confirmación de cambio de plan
 - [x] Actualizar header para mostrar plan actual del usuario
 - [x] Agregar badges de contenido premium en secciones restringidas
+
+## Desarrollo de Página de Rumores
+- [x] Crear página de rumores (/rumores) con diseño cyberpunk
+- [x] Mostrar lista de rumores con categorías (fichajes, renovaciones, salidas)
+- [x] Diseño de tarjetas de rumor con nivel de confiabilidad
+- [x] Filtros por equipo, posición y estado
+- [x] Indicador visual de "nivel de calor" del rumor
+- [x] Integración con sistema de artículos para contenido detallado
