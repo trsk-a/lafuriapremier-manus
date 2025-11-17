@@ -28,6 +28,7 @@ export function CyberHeader() {
   const premiumNavItems = [
     { label: "RADAR LATINO", href: "/radar-latino", tier: "PRO" },
     { label: "TALENTO IBÉRICO", href: "/talento-iberico", tier: "PRO" },
+    { label: "ANÁLISIS TÁCTICO", href: "/analisis-tactico", tier: "PRO" },
   ];
 
   const userTier = user?.subscriptionTier || "FREE";

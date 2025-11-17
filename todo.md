@@ -202,3 +202,6 @@
 - [x] Comparativas tácticas entre equipos
 - [x] Sistema de filtros por equipo y jornada
 - [x] Badge de contenido PREMIUM visible
+
+## Ajustes de Navegación
+- [x] Agregar link de Análisis Táctico al header principal
