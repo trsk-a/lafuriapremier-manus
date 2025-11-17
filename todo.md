@@ -328,10 +328,10 @@
 
 ### Tarjetas Estilo Greg Capullo
 - [x] Crear PlayerCard con diseño dramático y sombras intensas
-- [ ] Crear NewsCard con composición dinámica y contraste alto
-- [ ] Crear RumorCard con efectos de urgencia visual
-- [ ] Crear MatchCard con diseño épico y energético
-- [ ] Implementar sistema de badges y etiquetas visuales
+- [x] Crear NewsCard con composición dinámica y contraste alto
+- [x] Crear RumorCard con efectos de urgencia visual
+- [x] Crear MatchCard con diseño épico y energético
+- [x] Implementar sistema de badges y etiquetas visuales
 
 ### Componentes HUD y Estadísticas
 - [x] Crear StatsHUD con visualización tipo interfaz de videojuego
