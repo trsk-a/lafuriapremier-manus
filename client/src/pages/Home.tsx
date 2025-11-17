@@ -6,12 +6,47 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, TrendingUp, Users, Target } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const { data: todaysMatches, isLoading: matchLoading } = trpc.matches.todaysMatches.useQuery();
   const { data: articles, isLoading: articlesLoading } = trpc.articles.list.useQuery({
     limit: 6,
   });
+  
+  const subscribeNewsletter = trpc.newsletter.subscribe.useMutation({
+    onSuccess: () => {
+      toast.success("¡Suscripción exitosa!", {
+        description: "Recibirás nuestras newsletters con contenido exclusivo",
+      });
+      setEmail("");
+      setIsSubmitting(false);
+    },
+    onError: (error) => {
+      toast.error("Error al suscribirse", {
+        description: error.message || "Por favor, inténtalo de nuevo",
+      });
+      setIsSubmitting(false);
+    },
+  });
+  
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes("@")) {
+      toast.error("Email inválido", {
+        description: "Por favor, ingresa un email válido",
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    subscribeNewsletter.mutate({ email, frequency: "weekly" });
+  };
 
   const locutores = [
     {
@@ -209,19 +244,25 @@ export default function Home() {
               <p className="text-lg text-muted-foreground mb-8">
                 Recibe análisis exclusivos, estadísticas avanzadas y contenido premium directamente en tu correo
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <input
                   type="email"
                   placeholder="tu@email.com"
-                  className="w-full sm:w-96 px-6 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isSubmitting}
+                  className="w-full sm:w-96 px-6 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+                  required
                 />
                 <Button
+                  type="submit"
                   size="lg"
+                  disabled={isSubmitting}
                   className="w-full sm:w-auto cyber-glow-red font-heading tracking-wide"
                 >
-                  SUSCRIBIRME
+                  {isSubmitting ? "SUSCRIBIENDO..." : "SUSCRIBIRME"}
                 </Button>
-              </div>
+              </form>
               <p className="text-xs text-muted-foreground mt-4">
                 Contenido diferenciado según tu plan: FREE, PRO o PREMIUM
               </p>

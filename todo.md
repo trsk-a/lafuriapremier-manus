@@ -39,11 +39,11 @@
 - [ ] Contenido exclusivo PREMIUM
 
 ## Fase 6: Sistema de Newsletter
-- [ ] Crear tabla de suscriptores de newsletter
-- [ ] Implementar formulario de suscripción
+- [x] Crear tabla de suscriptores de newsletter
+- [x] Implementar formulario de suscripción
 - [ ] Crear templates de email por tier (FREE/PRO/PREMIUM)
 - [ ] Integrar con n8n para envío automatizado
-- [ ] Implementar segmentación por nivel de suscripción
+- [x] Implementar segmentación por nivel de suscripción
 - [ ] Crear panel de gestión de newsletters (admin)
 
 ## Fase 7: Componentes Visuales Cyberpunk
@@ -80,8 +80,8 @@
 ## Bugs Corregidos del Proyecto Original
 - [x] Estadísticas de partidos no se cargan (endpoint implementado)
 - [x] Alineaciones de partidos no se cargan (endpoint implementado)
-- [x] Sistema de suscripciones funcional (backend listo, falta UI)
-- [ ] Newsletter implementada y funcional
+- [x] Sistema de suscripciones funcional (completamente implementado)
+- [x] Newsletter implementada y funcional
 
 ## Ajustes de Diseño Solicitados
 - [x] Cambiar paleta de colores: quitar fucsia/magenta, agregar anaranjado
@@ -145,3 +145,12 @@
 - [x] Comparativas entre jugadores
 - [x] Sistema de ranking
 - [x] Integración con datos de API-Football
+
+## Implementación de Newsletter Funcional
+- [x] Crear procedimiento tRPC para suscripción a newsletter
+- [x] Validar formato de email y prevenir duplicados
+- [x] Asignar tier automáticamente según usuario autenticado
+- [x] Implementar componente de formulario en Home
+- [x] Agregar toast de confirmación de suscripción
+- [x] Crear endpoint para gestionar suscripciones (unsub)
+- [x] Preparar estructura para integración con servicio de envío
