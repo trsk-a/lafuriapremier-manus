@@ -154,3 +154,13 @@
 - [x] Agregar toast de confirmación de suscripción
 - [x] Crear endpoint para gestionar suscripciones (unsub)
 - [x] Preparar estructura para integración con servicio de envío
+
+## Desarrollo de Página de Jugadores
+- [x] Crear página de jugadores (/jugadores) con diseño cyberpunk
+- [x] Implementar buscador en tiempo real por nombre
+- [x] Filtros múltiples: equipo, posición, nacionalidad, edad
+- [x] Ordenamiento por: nombre, rating, goles, asistencias, valor
+- [x] Grid de tarjetas de jugador con estadísticas clave
+- [x] Paginación o scroll infinito
+- [x] Integración con datos de API-Football
+- [x] Link a perfil detallado de cada jugador
