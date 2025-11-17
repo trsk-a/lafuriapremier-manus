@@ -530,6 +530,50 @@ export const appRouter = router({
         const supabaseDb = await import('./supabase-db');
         return await supabaseDb.getTransfers(input);
       }),
+  
+  // ── Search ────────────────────────────────────────────────
+  search: router({
+    suggestions: publicProcedure
+      .input(z.object({ query: z.string().min(2) }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        const [noticias, rumores] = await Promise.all([
+          supabaseDb.searchNoticias(input.query, 5),
+          supabaseDb.searchRumores(input.query, 5),
+        ]);
+        
+        return [
+          ...noticias.map((n: any) => ({ title: n.titular, type: 'noticia' as const })),
+          ...rumores.map((r: any) => ({ title: r.titular, type: 'rumor' as const })),
+        ];
+      }),
+    
+    all: publicProcedure
+      .input(z.object({ 
+        query: z.string().min(1),
+        type: z.enum(['all', 'noticias', 'rumores']).optional(),
+      }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        
+        if (input.type === 'noticias') {
+          const noticias = await supabaseDb.searchNoticias(input.query, 50);
+          return { noticias, rumores: [] };
+        }
+        
+        if (input.type === 'rumores') {
+          const rumores = await supabaseDb.searchRumores(input.query, 50);
+          return { noticias: [], rumores };
+        }
+        
+        const [noticias, rumores] = await Promise.all([
+          supabaseDb.searchNoticias(input.query, 25),
+          supabaseDb.searchRumores(input.query, 25),
+        ]);
+        
+        return { noticias, rumores };
+      }),
+  }),
   }),
 });
 

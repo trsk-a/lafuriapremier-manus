@@ -42,8 +42,7 @@ export function CyberHeader() {
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/">
-            <a className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
               <img 
                 src={APP_LOGO} 
                 alt="La Furia Premier" 
@@ -57,17 +56,14 @@ export function CyberHeader() {
                   PREMIER
                 </span>
               </div>
-            </a>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <a className="relative px-4 py-2 font-heading text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors group">
-                  {item.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
-                </a>
+              <Link key={item.href} href={item.href} className="relative px-4 py-2 font-heading text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors group">
+                {item.label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
               </Link>
             ))}
             
@@ -75,11 +71,9 @@ export function CyberHeader() {
               <>
                 <div className="w-px h-6 bg-border mx-2" />
                 {premiumNavItems.map((item) => (
-                  <Link key={item.href} href={item.href}>
-                    <a className="relative px-4 py-2 font-heading text-sm tracking-wide text-accent hover:text-secondary transition-colors group">
-                      {item.label}
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300" />
-                    </a>
+                  <Link key={item.href} href={item.href} className="relative px-4 py-2 font-heading text-sm tracking-wide text-accent hover:text-secondary transition-colors group">
+                    {item.label}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300" />
                   </Link>
                 ))}
               </>
@@ -149,13 +143,13 @@ export function CyberHeader() {
           <div className="lg:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-2">
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  <a 
-                    className="block px-4 py-2 font-heading text-sm tracking-wide text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </a>
+                <Link 
+                  key={item.href} 
+                  href={item.href}
+                  className="block px-4 py-2 font-heading text-sm tracking-wide text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
                 </Link>
               ))}
               
@@ -163,13 +157,13 @@ export function CyberHeader() {
                 <>
                   <div className="h-px bg-border my-2" />
                   {premiumNavItems.map((item) => (
-                    <Link key={item.href} href={item.href}>
-                      <a 
-                        className="block px-4 py-2 font-heading text-sm tracking-wide text-accent hover:text-secondary hover:bg-muted/50 rounded transition-colors"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.label}
-                      </a>
+                    <Link 
+                      key={item.href} 
+                      href={item.href}
+                      className="block px-4 py-2 font-heading text-sm tracking-wide text-accent hover:text-secondary hover:bg-muted/50 rounded transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
                     </Link>
                   ))}
                 </>

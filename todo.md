@@ -346,3 +346,52 @@
 - [ ] Actualizar página de Jugador con PlayerCard mejorada
 - [ ] Actualizar página de Rumores con efectos visuales
 - [ ] Actualizar página de Jornadas con diseño mejorado
+
+
+## FASE 8 EN DESARROLLO: Funcionalidades Adicionales
+
+### Sistema de Búsqueda Global
+- [ ] Crear componente SearchBar con input y botón de búsqueda
+- [ ] Implementar autocompletado con sugerencias mientras se escribe
+- [ ] Crear endpoint tRPC para búsqueda en noticias, rumores y jugadores
+- [ ] Implementar página de resultados de búsqueda con tabs
+- [ ] Agregar historial de búsquedas recientes (localStorage)
+- [ ] Implementar búsqueda por voz (opcional)
+
+### Filtros Avanzados
+- [ ] Crear componente FilterPanel con múltiples criterios
+- [ ] Implementar filtro por categoría/tipo de contenido
+- [ ] Implementar filtro por equipo (select con logos)
+- [ ] Implementar filtro por jugador (autocomplete)
+- [ ] Implementar filtro por rango de fechas (date picker)
+- [ ] Implementar filtro por nivel de fiabilidad (rumores)
+- [ ] Agregar botón "Limpiar filtros" y contador de filtros activos
+- [ ] Persistir filtros seleccionados en URL (query params)
+
+### Sistema de Favoritos
+- [ ] Crear tabla favorites en Supabase (user_id, content_type, content_id)
+- [ ] Implementar endpoints tRPC para agregar/quitar favoritos
+- [ ] Crear componente FavoriteButton con animación
+- [ ] Agregar indicador de favorito en tarjetas de contenido
+- [ ] Crear página /favoritos con contenido guardado
+- [ ] Implementar tabs en favoritos (Noticias, Rumores, Jugadores)
+- [ ] Agregar contador de favoritos en perfil de usuario
+
+### Notificaciones en Tiempo Real
+- [ ] Configurar sistema de notificaciones push (opcional)
+- [ ] Crear componente NotificationBell con badge de contador
+- [ ] Implementar dropdown de notificaciones recientes
+- [ ] Crear endpoints para marcar notificaciones como leídas
+- [ ] Agregar notificaciones para: nuevo contenido, rumores calientes, fichajes confirmados
+- [ ] Implementar preferencias de notificaciones en configuración de usuario
+- [ ] Agregar sonido/vibración para notificaciones importantes (opcional)
+
+### Integración y Optimización
+- [ ] Integrar SearchBar en CyberHeader
+- [ ] Integrar FilterPanel en páginas de Noticias y Rumores
+- [ ] Integrar FavoriteButton en todas las tarjetas de contenido
+- [ ] Integrar NotificationBell en CyberHeader
+- [ ] Optimizar queries de búsqueda y filtros (índices en DB)
+- [ ] Implementar debounce en búsqueda para reducir requests
+- [ ] Agregar loading states y skeleton loaders
+- [ ] Testing de funcionalidades en diferentes dispositivos

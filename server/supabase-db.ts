@@ -503,3 +503,36 @@ export async function getUserByOpenId(openId: string): Promise<AppUser | undefin
     return undefined;
   }
 }
+
+// ── Search Functions ──────────────────────────────────────
+export async function searchNoticias(query: string, limit: number = 20) {
+  const pool = await getSupabasePool();
+  const searchTerm = `%${query}%`;
+  
+  const result = await pool.query(
+    `SELECT * FROM noticias 
+     WHERE status = 'published' 
+     AND (titular ILIKE $1 OR contenido ILIKE $1)
+     ORDER BY fecha DESC
+     LIMIT $2`,
+    [searchTerm, limit]
+  );
+  
+  return result.rows;
+}
+
+export async function searchRumores(query: string, limit: number = 20) {
+  const pool = await getSupabasePool();
+  const searchTerm = `%${query}%`;
+  
+  const result = await pool.query(
+    `SELECT * FROM rumores 
+     WHERE status = 'published' 
+     AND (titular ILIKE $1 OR contenido ILIKE $1)
+     ORDER BY fecha DESC
+     LIMIT $2`,
+    [searchTerm, limit]
+  );
+  
+  return result.rows;
+}
