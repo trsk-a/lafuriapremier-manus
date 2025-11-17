@@ -32,8 +32,8 @@
 - [x] Página de fichajes
 
 ## Fase 5: Contenido Premium
-- [ ] Página de Radar Latino (PRO+)
-- [ ] Página de Talento Ibérico (PRO+)
+- [x] Página de Radar Latino (PRO+)
+- [x] Página de Talento Ibérico (PRO+)
 - [ ] Página de detalle de jugador con stats avanzadas (PRO+)
 - [ ] Sección de análisis táctico premium (PRO+)
 - [ ] Contenido exclusivo PREMIUM
@@ -127,3 +127,21 @@
 - [x] Filtros por equipo, posición y estado
 - [x] Indicador visual de "nivel de calor" del rumor
 - [x] Integración con sistema de artículos para contenido detallado
+
+## Desarrollo de Radar Latino (Premium)
+- [x] Crear página de Radar Latino (/radar-latino) con diseño cyberpunk
+- [x] Implementar control de acceso (solo PRO/PREMIUM)
+- [x] Mostrar lista de jugadores latinos destacados
+- [x] Tarjetas de jugador con estadísticas clave
+- [x] Filtros por país, equipo, posición
+- [x] Badge de contenido premium visible
+- [x] Mensaje de upgrade para usuarios FREE
+
+## Desarrollo de Talento Ibérico (Premium)
+- [x] Crear página de Talento Ibérico (/talento-iberico) con diseño cyberpunk
+- [x] Implementar control de acceso (solo PRO/PREMIUM)
+- [x] Mostrar lista de jugadores españoles y portugueses
+- [x] Tarjetas con análisis detallado y métricas avanzadas
+- [x] Comparativas entre jugadores
+- [x] Sistema de ranking
+- [x] Integración con datos de API-Football
