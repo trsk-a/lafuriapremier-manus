@@ -369,3 +369,137 @@ export async function getContentStats() {
     return null;
   }
 }
+
+// ── OAuth Users ───────────────────────────────────────────
+
+export interface AppUser {
+  id: number;
+  openId: string;
+  name: string | null;
+  email: string | null;
+  loginMethod: string | null;
+  role: 'admin' | 'user';
+  createdAt: Date;
+  updatedAt: Date;
+  lastSignedIn: Date;
+  // Campos adicionales para compatibilidad con User type
+  subscriptionTier: 'FREE' | 'PRO' | 'PREMIUM';
+  subscriptionStatus: 'active' | 'cancelled' | 'expired';
+  subscriptionStartDate: Date | null;
+  subscriptionEndDate: Date | null;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+  newsletterSubscribed: boolean;
+  newsletterFrequency: 'daily' | 'weekly' | 'never';
+  favoriteTeams: string | null;
+}
+
+export async function upsertUser(user: {
+  openId: string;
+  name?: string | null;
+  email?: string | null;
+  loginMethod?: string | null;
+  lastSignedIn?: Date;
+  role?: 'admin' | 'user';
+}): Promise<void> {
+  const sql = getSupabaseSql();
+  if (!sql) {
+    console.warn('[Supabase] Cannot upsert user: database not available');
+    return;
+  }
+
+  try {
+    const userData = {
+      open_id: user.openId,
+      name: user.name || null,
+      email: user.email || null,
+      login_method: user.loginMethod || null,
+      last_signed_in: user.lastSignedIn || new Date(),
+      role: user.role || 'user',
+      updated_at: new Date(),
+    };
+
+    // Use PostgreSQL UPSERT (INSERT ... ON CONFLICT)
+    await sql`
+      INSERT INTO app_users (open_id, name, email, login_method, role, last_signed_in, created_at, updated_at)
+      VALUES (
+        ${userData.open_id},
+        ${userData.name},
+        ${userData.email},
+        ${userData.login_method},
+        ${userData.role},
+        ${userData.last_signed_in},
+        NOW(),
+        NOW()
+      )
+      ON CONFLICT (open_id) 
+      DO UPDATE SET
+        name = EXCLUDED.name,
+        email = EXCLUDED.email,
+        login_method = EXCLUDED.login_method,
+        role = EXCLUDED.role,
+        last_signed_in = EXCLUDED.last_signed_in,
+        updated_at = NOW()
+    `;
+  } catch (error) {
+    console.error('[Supabase] Failed to upsert user:', error);
+    throw error;
+  }
+}
+
+export async function getUserByOpenId(openId: string): Promise<AppUser | undefined> {
+  const sql = getSupabaseSql();
+  if (!sql) {
+    console.warn('[Supabase] Cannot get user: database not available');
+    return undefined;
+  }
+
+  try {
+    const result = await sql<Array<{
+      id: number;
+      open_id: string;
+      name: string | null;
+      email: string | null;
+      login_method: string | null;
+      role: 'admin' | 'user';
+      created_at: Date;
+      updated_at: Date;
+      last_signed_in: Date;
+    }>>` 
+      SELECT * FROM app_users WHERE open_id = ${openId} LIMIT 1
+    `;
+
+    if (result.length === 0) return undefined;
+
+    const user = result[0];
+    
+    // Force admin role for project owner
+    const ownerOpenId = process.env.OWNER_OPEN_ID;
+    const isOwner = ownerOpenId && user.open_id === ownerOpenId;
+    
+    return {
+      id: user.id,
+      openId: user.open_id,
+      name: user.name,
+      email: user.email,
+      loginMethod: user.login_method,
+      role: isOwner ? 'admin' : user.role,
+      createdAt: user.created_at,
+      updatedAt: user.updated_at,
+      lastSignedIn: user.last_signed_in,
+      // Valores por defecto para compatibilidad
+      subscriptionTier: 'FREE',
+      subscriptionStatus: 'active',
+      subscriptionStartDate: null,
+      subscriptionEndDate: null,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      newsletterSubscribed: false,
+      newsletterFrequency: 'never',
+      favoriteTeams: null,
+    };
+  } catch (error) {
+    console.error('[Supabase] Failed to get user:', error);
+    return undefined;
+  }
+}
