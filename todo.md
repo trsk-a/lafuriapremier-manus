@@ -205,3 +205,7 @@
 
 ## Ajustes de Navegación
 - [x] Agregar link de Análisis Táctico al header principal
+
+## Ajustes de Panel de Admin
+- [x] Agregar link visible al panel de admin en el header para usuarios admin
+- [x] Verificar que el owner tenga automáticamente role='admin'

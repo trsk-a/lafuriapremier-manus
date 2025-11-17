@@ -90,6 +90,17 @@ export function CyberHeader() {
           <div className="hidden lg:flex items-center gap-3">
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
+                {user?.role === 'admin' && (
+                  <Link href="/admin">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="cyber-border text-primary border-primary hover:bg-primary/10"
+                    >
+                      ADMIN
+                    </Button>
+                  </Link>
+                )}
                 <div className="flex flex-col items-end">
                   <span className="text-sm font-medium text-foreground">
                     {user?.name || "Usuario"}
