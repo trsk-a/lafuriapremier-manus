@@ -14,6 +14,7 @@ import RadarLatino from "./pages/RadarLatino";
 import TalentoIberico from "./pages/TalentoIberico";
 import Jugadores from "./pages/Jugadores";
 import PlayerProfile from "./pages/PlayerProfile";
+import AdminDashboard from "./pages/admin/Dashboard";
 
 function Router() {
   return (
@@ -28,6 +29,7 @@ function Router() {
       <Route path={"/talento-iberico"} component={TalentoIberico} />
       <Route path={"/jugadores"} component={Jugadores} />
       <Route path={"/jugador/:id"} component={PlayerProfile} />
+      <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />
       {/* TODO: Add more routes here */}
       <Route component={NotFound} />

@@ -240,6 +240,13 @@ export const appRouter = router({
         await db.unsubscribeFromNewsletter(input.email);
         return { success: true };
       }),
+
+    subscribers: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores pueden ver suscriptores' });
+      }
+      return await db.getActiveNewsletterSubscribers();
+    }),
   }),
 
   // ── User Subscription ─────────────────────────────────────

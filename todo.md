@@ -175,3 +175,18 @@
 - [x] Información personal (edad, nacionalidad, altura, peso, pie preferido)
 - [x] Valor de mercado y evolución
 - [x] Integración con datos de API-Football
+
+## Desarrollo de Panel de Administración
+- [x] Crear layout de admin con sidebar de navegación
+- [x] Proteger rutas de admin (solo usuarios con role='admin')
+- [x] Dashboard principal con métricas y estadísticas
+- [ ] Gestión de artículos (crear, editar, eliminar, listar)
+- [ ] Gestión de rumores (crear, editar, eliminar, listar)
+- [ ] Gestión de fichajes (crear, editar, eliminar, listar)
+- [ ] Gestión de jugadores (crear, editar, eliminar, listar)
+- [x] Gestión de suscriptores de newsletter (listar, exportar CSV)
+- [ ] Editor de contenido con markdown o WYSIWYG
+- [ ] Sistema de categorización y tags
+- [ ] Programación de publicaciones (fecha de publicación futura)
+- [ ] Control de acceso por tier (FREE/PRO/PREMIUM)
+- [ ] Subida de imágenes para artículos
