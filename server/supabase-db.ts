@@ -506,33 +506,130 @@ export async function getUserByOpenId(openId: string): Promise<AppUser | undefin
 
 // ── Search Functions ──────────────────────────────────────
 export async function searchNoticias(query: string, limit: number = 20) {
-  const pool = await getSupabasePool();
-  const searchTerm = `%${query}%`;
+  const sql = getSupabaseSql();
+  if (!sql) return [];
   
-  const result = await pool.query(
-    `SELECT * FROM noticias 
-     WHERE status = 'published' 
-     AND (titular ILIKE $1 OR contenido ILIKE $1)
-     ORDER BY fecha DESC
-     LIMIT $2`,
-    [searchTerm, limit]
-  );
-  
-  return result.rows;
+  try {
+    const searchTerm = `%${query}%`;
+    const result = await sql<Noticia[]>`
+      SELECT * FROM noticias 
+      WHERE status = 'published' 
+      AND (title ILIKE ${searchTerm} OR content ILIKE ${searchTerm})
+      ORDER BY published DESC
+      LIMIT ${limit}
+    `;
+    return result;
+  } catch (error) {
+    console.error('[Supabase] Error searching noticias:', error);
+    return [];
+  }
 }
 
 export async function searchRumores(query: string, limit: number = 20) {
-  const pool = await getSupabasePool();
-  const searchTerm = `%${query}%`;
+  const sql = getSupabaseSql();
+  if (!sql) return [];
   
-  const result = await pool.query(
-    `SELECT * FROM rumores 
-     WHERE status = 'published' 
-     AND (titular ILIKE $1 OR contenido ILIKE $1)
-     ORDER BY fecha DESC
-     LIMIT $2`,
-    [searchTerm, limit]
-  );
-  
-  return result.rows;
+  try {
+    const searchTerm = `%${query}%`;
+    const result = await sql<Rumor[]>`
+      SELECT * FROM rumores 
+      WHERE status = 'published' 
+      AND (titulo ILIKE ${searchTerm} OR cuerpo ILIKE ${searchTerm})
+      ORDER BY publicado_en DESC
+      LIMIT ${limit}
+    `;
+    return result;
+  } catch (error) {
+    console.error('[Supabase] Error searching rumores:', error);
+    return [];
+  }
+}
+
+// ── Jugadores ─────────────────────────────────────────────
+
+export interface Jugador {
+  id: number;
+  name: string | null;
+  firstname: string | null;
+  lastname: string | null;
+  age: number | null;
+  birth_date: Date | null;
+  birth_place: string | null;
+  birth_country: string | null;
+  nationality: string | null;
+  height: string | null;
+  weight: string | null;
+  injured: boolean | null;
+  photo: string | null;
+  updated_at: Date | null;
+  number: number | null;
+  team_id: number | null;
+  team_name: string | null;
+  position: string | null;
+  appearances: number | null;
+  minutes_played: number | null;
+  goals: number | null;
+  assists: number | null;
+  yellow_cards: number | null;
+  red_cards: number | null;
+}
+
+export async function getJugadores(opts: {
+  limit?: number;
+  offset?: number;
+  team_id?: number;
+  position?: string;
+  nationality?: string;
+  search?: string;
+}) {
+  const sql = getSupabaseSql();
+  if (!sql) return [];
+
+  try {
+    const conditions = [];
+    if (opts.team_id) {
+      conditions.push(`team_id = ${opts.team_id}`);
+    }
+    if (opts.position) {
+      conditions.push(`position = '${opts.position}'`);
+    }
+    if (opts.nationality) {
+      conditions.push(`nationality ILIKE '%${opts.nationality}%'`);
+    }
+    if (opts.search) {
+      conditions.push(`(name ILIKE '%${opts.search}%' OR firstname ILIKE '%${opts.search}%' OR lastname ILIKE '%${opts.search}%')`);
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const limitClause = opts.limit ? `LIMIT ${opts.limit}` : 'LIMIT 50';
+    const offsetClause = opts.offset ? `OFFSET ${opts.offset}` : '';
+
+    const query = `
+      SELECT * FROM jugadores 
+      ${whereClause}
+      ORDER BY goals DESC NULLS LAST, name ASC
+      ${limitClause} ${offsetClause}
+    `;
+
+    const result = await sql.unsafe<Jugador[]>(query);
+    return result;
+  } catch (error) {
+    console.error('[Supabase] Error fetching jugadores:', error);
+    return [];
+  }
+}
+
+export async function getJugadorById(id: number) {
+  const sql = getSupabaseSql();
+  if (!sql) return null;
+
+  try {
+    const result = await sql<Jugador[]>`
+      SELECT * FROM jugadores WHERE id = ${id} LIMIT 1
+    `;
+    return result[0] || null;
+  } catch (error) {
+    console.error('[Supabase] Error fetching jugador:', error);
+    return null;
+  }
 }

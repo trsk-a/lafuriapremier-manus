@@ -351,6 +351,28 @@
 ## FASE 8 EN DESARROLLO: Funcionalidades Adicionales
 
 ### Sistema de Búsqueda Global
+- [x] Crear componente SearchBar con autocompletado
+- [x] Integrar SearchBar en CyberHeader (desktop y mobile)
+- [x] Implementar router tRPC de búsqueda (suggestions y all)
+- [x] Agregar funciones de búsqueda en supabase-db.ts
+- [ ] Crear página /buscar para resultados completos
+- [ ] Implementar filtros avanzados en resultados
+- [ ] Agregar historial de búsquedas recientes
+- [ ] Implementar búsqueda por voz (opcional)
+
+### Carga de Jugadores desde Supabase
+- [x] Agregar funciones getJugadores y getJugadorById en supabase-db.ts
+- [x] Actualizar router players para usar Supabase
+- [x] Actualizar página Jugadores para cargar desde tabla jugadores
+- [x] Implementar filtros por equipo, posición, nacionalidad
+- [x] Implementar búsqueda en tiempo real
+- [x] Implementar ordenamiento por goles/asistencias/nombre
+- [ ] Actualizar página de perfil de jugador para usar datos reales
+
+### Carga de Fichajes desde Supabase
+- [ ] Verificar que router content.transfers use Supabase correctamente
+- [ ] Actualizar página Fichajes para cargar desde tabla transfers
+- [ ] Implementar filtros por temporada y tipo de transferencia
 - [ ] Crear componente SearchBar con input y botón de búsqueda
 - [ ] Implementar autocompletado con sugerencias mientras se escribe
 - [ ] Crear endpoint tRPC para búsqueda en noticias, rumores y jugadores
@@ -395,3 +417,30 @@
 - [ ] Implementar debounce en búsqueda para reducir requests
 - [ ] Agregar loading states y skeleton loaders
 - [ ] Testing de funcionalidades en diferentes dispositivos
+
+
+## TAREAS URGENTES: Integración Visible de Funcionalidades
+
+### Integración SearchBar
+- [ ] Agregar SearchBar en CyberHeader (desktop y mobile)
+- [ ] Crear página /buscar para resultados de búsqueda
+- [ ] Verificar que autocompletado funcione correctamente
+- [ ] Publicar contenido de prueba en Supabase (HECHO: 10 noticias + 10 rumores)
+
+### Panel de Moderación Accesible
+- [ ] Verificar que /admin/moderacion cargue correctamente
+- [ ] Asegurar que el enlace "Moderación" aparezca en sidebar de admin
+- [ ] Verificar que se listen noticias/rumores pendientes
+- [ ] Probar acciones de aprobar/rechazar/eliminar
+
+### Cargar Datos desde Supabase
+- [ ] Actualizar página Jugadores para cargar desde tabla jugadores/latinos
+- [ ] Actualizar página Fichajes para cargar desde tabla transfers
+- [ ] Verificar que los datos se muestren con componentes cyberpunk
+- [ ] Agregar loading states y manejo de errores
+
+### Verificación Visual Componentes Cyberpunk
+- [ ] Confirmar que NewsCard se muestra en /noticias
+- [ ] Confirmar que RumorCard se muestra en /rumores
+- [ ] Verificar efectos neón y animaciones glitch
+- [ ] Hacer hard refresh del navegador para limpiar caché

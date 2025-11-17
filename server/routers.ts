@@ -181,35 +181,31 @@ export const appRouter = router({
         z.object({
           limit: z.number().optional(),
           offset: z.number().optional(),
+          team_id: z.number().optional(),
+          position: z.string().optional(),
+          nationality: z.string().optional(),
+          search: z.string().optional(),
         })
       )
       .query(async ({ input }) => {
-        const players = await db.getPlayers({
-          limit: input.limit,
-          offset: input.offset,
+        const supabaseDb = await import('./supabase-db');
+        const players = await supabaseDb.getJugadores({
+          limit: input.limit || 50,
+          offset: input.offset || 0,
+          team_id: input.team_id,
+          position: input.position,
+          nationality: input.nationality,
+          search: input.search,
         });
         return players;
       }),
 
-    getBySlug: publicProcedure
-      .input(z.object({ slug: z.string() }))
-      .query(async ({ input, ctx }) => {
-        const player = await db.getPlayerBySlug(input.slug);
-        if (!player) return null;
-
-        const userTier = ctx.user?.subscriptionTier || "FREE";
-
-        // Check if premium content is locked
-        if (player.isPremium && userTier === "FREE") {
-          return { 
-            ...player, 
-            bio: null, 
-            analysis: null, 
-            locked: true 
-          };
-        }
-
-        return { ...player, locked: false };
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        const player = await supabaseDb.getJugadorById(input.id);
+        return player;
       }),
   }),
 
@@ -530,6 +526,7 @@ export const appRouter = router({
         const supabaseDb = await import('./supabase-db');
         return await supabaseDb.getTransfers(input);
       }),
+  }),
   
   // ── Search ────────────────────────────────────────────────
   search: router({
@@ -543,8 +540,8 @@ export const appRouter = router({
         ]);
         
         return [
-          ...noticias.map((n: any) => ({ title: n.titular, type: 'noticia' as const })),
-          ...rumores.map((r: any) => ({ title: r.titular, type: 'rumor' as const })),
+          ...noticias.map((n: any) => ({ title: n.title || n.titular, type: 'noticia' as const })),
+          ...rumores.map((r: any) => ({ title: r.titulo || r.titular, type: 'rumor' as const })),
         ];
       }),
     
@@ -573,7 +570,6 @@ export const appRouter = router({
         
         return { noticias, rumores };
       }),
-  }),
   }),
 });
 

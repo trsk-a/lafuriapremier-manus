@@ -18,137 +18,12 @@ import {
   Target,
   Award,
   ArrowRight,
-  Users
+  Users,
+  Loader2
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { Link } from "wouter";
-
-interface Player {
-  id: string;
-  name: string;
-  team: string;
-  position: string;
-  nationality: string;
-  age: number;
-  rating: number;
-  goals: number;
-  assists: number;
-  matches: number;
-  marketValue: string;
-  image?: string;
-}
-
-// Mock data - En producción esto vendría de API-Football
-const mockPlayers: Player[] = [
-  {
-    id: '1',
-    name: 'Erling Haaland',
-    team: 'Manchester City',
-    position: 'DC',
-    nationality: 'Noruega',
-    age: 23,
-    rating: 9.2,
-    goals: 27,
-    assists: 5,
-    matches: 28,
-    marketValue: '180M€',
-  },
-  {
-    id: '2',
-    name: 'Mohamed Salah',
-    team: 'Liverpool',
-    position: 'ED',
-    nationality: 'Egipto',
-    age: 31,
-    rating: 8.7,
-    goals: 18,
-    assists: 12,
-    matches: 29,
-    marketValue: '65M€',
-  },
-  {
-    id: '3',
-    name: 'Kevin De Bruyne',
-    team: 'Manchester City',
-    position: 'MC',
-    nationality: 'Bélgica',
-    age: 32,
-    rating: 8.9,
-    goals: 6,
-    assists: 16,
-    matches: 24,
-    marketValue: '70M€',
-  },
-  {
-    id: '4',
-    name: 'Bukayo Saka',
-    team: 'Arsenal',
-    position: 'ED',
-    nationality: 'Inglaterra',
-    age: 22,
-    rating: 8.4,
-    goals: 14,
-    assists: 11,
-    matches: 30,
-    marketValue: '120M€',
-  },
-  {
-    id: '5',
-    name: 'Rodri',
-    team: 'Manchester City',
-    position: 'MCD',
-    nationality: 'España',
-    age: 27,
-    rating: 8.8,
-    goals: 5,
-    assists: 7,
-    matches: 30,
-    marketValue: '110M€',
-  },
-  {
-    id: '6',
-    name: 'Bruno Fernandes',
-    team: 'Manchester United',
-    position: 'MC',
-    nationality: 'Portugal',
-    age: 29,
-    rating: 8.3,
-    goals: 10,
-    assists: 12,
-    matches: 30,
-    marketValue: '85M€',
-  },
-  {
-    id: '7',
-    name: 'Heung-Min Son',
-    team: 'Tottenham',
-    position: 'EI',
-    nationality: 'Corea del Sur',
-    age: 31,
-    rating: 8.1,
-    goals: 15,
-    assists: 9,
-    matches: 28,
-    marketValue: '60M€',
-  },
-  {
-    id: '8',
-    name: 'Virgil van Dijk',
-    team: 'Liverpool',
-    position: 'DFC',
-    nationality: 'Países Bajos',
-    age: 32,
-    rating: 8.5,
-    goals: 3,
-    assists: 2,
-    matches: 29,
-    marketValue: '45M€',
-  },
-];
-
-const teams = ['Todos', ...Array.from(new Set(mockPlayers.map(p => p.team)))];
-const positions = ['Todas', 'DC', 'ED', 'EI', 'MC', 'MCD', 'MCO', 'DFC', 'LI', 'LD', 'POR'];
-const nationalities = ['Todas', ...Array.from(new Set(mockPlayers.map(p => p.nationality)))];
+import { trpc } from "@/lib/trpc";
 
 export default function Jugadores() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -157,19 +32,35 @@ export default function Jugadores() {
   const [selectedNationality, setSelectedNationality] = useState("Todas");
   const [sortBy, setSortBy] = useState<'rating' | 'goals' | 'assists' | 'name'>('rating');
 
-  const filteredPlayers = useMemo(() => {
-    let filtered = mockPlayers;
+  // Fetch players from Supabase
+  const { data: players = [], isLoading } = trpc.players.list.useQuery({
+    limit: 100,
+    offset: 0,
+    search: searchQuery || undefined,
+  });
 
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(player =>
-        player.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
+  // Extract unique values for filters
+  const teams = useMemo(() => {
+    const uniqueTeams = new Set(players.map(p => p.team_name).filter(Boolean));
+    return ["Todos", ...Array.from(uniqueTeams).sort()];
+  }, [players]);
+
+  const positions = useMemo(() => {
+    const uniquePositions = new Set(players.map(p => p.position).filter(Boolean));
+    return ["Todas", ...Array.from(uniquePositions).sort()];
+  }, [players]);
+
+  const nationalities = useMemo(() => {
+    const uniqueNationalities = new Set(players.map(p => p.nationality).filter(Boolean));
+    return ["Todas", ...Array.from(uniqueNationalities).sort()];
+  }, [players]);
+
+  const filteredPlayers = useMemo(() => {
+    let filtered = [...players];
 
     // Team filter
     if (selectedTeam !== "Todos") {
-      filtered = filtered.filter(player => player.team === selectedTeam);
+      filtered = filtered.filter(player => player.team_name === selectedTeam);
     }
 
     // Position filter
@@ -186,26 +77,32 @@ export default function Jugadores() {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'rating':
-          return b.rating - a.rating;
+          // Sort by goals as fallback since rating doesn't exist
+          return (b.goals || 0) - (a.goals || 0);
         case 'goals':
-          return b.goals - a.goals;
+          return (b.goals || 0) - (a.goals || 0);
         case 'assists':
-          return b.assists - a.assists;
+          return (b.assists || 0) - (a.assists || 0);
         case 'name':
-          return a.name.localeCompare(b.name);
+          return (a.name || '').localeCompare(b.name || '');
         default:
           return 0;
       }
     });
 
     return filtered;
-  }, [searchQuery, selectedTeam, selectedPosition, selectedNationality, sortBy]);
+  }, [players, selectedTeam, selectedPosition, selectedNationality, sortBy]);
 
-  const getRatingColor = (rating: number) => {
-    if (rating >= 9) return 'text-primary';
-    if (rating >= 8.5) return 'text-secondary';
-    if (rating >= 8) return 'text-accent';
-    return 'text-muted-foreground';
+
+
+  const getPositionBadge = (position: string | null) => {
+    if (!position) return 'bg-gray-500/20 text-gray-400';
+    const pos = position.toUpperCase();
+    if (pos.includes('FORWARD') || pos.includes('ATTACKER')) return 'bg-red-500/20 text-red-400';
+    if (pos.includes('MID')) return 'bg-cyan-500/20 text-cyan-400';
+    if (pos.includes('DEF')) return 'bg-green-500/20 text-green-400';
+    if (pos.includes('GOAL')) return 'bg-yellow-500/20 text-yellow-400';
+    return 'bg-gray-500/20 text-gray-400';
   };
 
   return (
@@ -253,7 +150,7 @@ export default function Jugadores() {
                 </SelectTrigger>
                 <SelectContent>
                   {teams.map(team => (
-                    <SelectItem key={team} value={team}>{team}</SelectItem>
+                    <SelectItem key={team} value={team || ''}>{team}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -265,154 +162,179 @@ export default function Jugadores() {
                 </SelectTrigger>
                 <SelectContent>
                   {positions.map(pos => (
-                    <SelectItem key={pos} value={pos}>{pos}</SelectItem>
+                    <SelectItem key={pos} value={pos || ''}>{pos}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              {/* Sort */}
-              <Select value={sortBy} onValueChange={(val) => setSortBy(val as any)}>
+              {/* Nationality Filter */}
+              <Select value={selectedNationality} onValueChange={setSelectedNationality}>
                 <SelectTrigger className="cyber-border-sm">
-                  <SelectValue placeholder="Ordenar" />
+                  <SelectValue placeholder="Nacionalidad" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="rating">Rating</SelectItem>
-                  <SelectItem value="goals">Goles</SelectItem>
-                  <SelectItem value="assists">Asistencias</SelectItem>
-                  <SelectItem value="name">Nombre</SelectItem>
+                  {nationalities.map(nat => (
+                    <SelectItem key={nat} value={nat || ''}>{nat}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Results count */}
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                <span className="font-mono-cyber text-primary">{filteredPlayers.length}</span> jugadores encontrados
-              </p>
-              {(searchQuery || selectedTeam !== "Todos" || selectedPosition !== "Todas" || selectedNationality !== "Todas") && (
+            {/* Sort Options */}
+            <div className="flex items-center gap-2 mt-4">
+              <span className="text-sm text-muted-foreground">Ordenar por:</span>
+              <div className="flex gap-2">
                 <Button
-                  variant="ghost"
+                  variant={sortBy === 'rating' ? 'default' : 'outline'}
                   size="sm"
+                  onClick={() => setSortBy('rating')}
+                  className="cyber-border-sm"
+                >
+                  <Award className="w-4 h-4 mr-2" />
+                  Rating
+                </Button>
+                <Button
+                  variant={sortBy === 'goals' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSortBy('goals')}
+                  className="cyber-border-sm"
+                >
+                  <Target className="w-4 h-4 mr-2" />
+                  Goles
+                </Button>
+                <Button
+                  variant={sortBy === 'assists' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSortBy('assists')}
+                  className="cyber-border-sm"
+                >
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  Asistencias
+                </Button>
+                <Button
+                  variant={sortBy === 'name' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSortBy('name')}
+                  className="cyber-border-sm"
+                >
+                  Nombre
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Players Grid */}
+        <div className="container py-8">
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-cyan-500" />
+            </div>
+          ) : filteredPlayers.length === 0 ? (
+            <Card className="bg-card/50 border-border">
+              <CardContent className="p-12 text-center">
+                <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-foreground mb-2">No se encontraron jugadores</h3>
+                <p className="text-muted-foreground mb-4">
+                  Intenta ajustar los filtros de búsqueda
+                </p>
+                <Button
                   onClick={() => {
                     setSearchQuery("");
                     setSelectedTeam("Todos");
                     setSelectedPosition("Todas");
                     setSelectedNationality("Todas");
                   }}
-                  className="text-xs"
+                  variant="outline"
                 >
-                  <Filter className="w-3 h-3 mr-1" />
-                  Limpiar filtros
+                  Limpiar Filtros
                 </Button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Players Grid */}
-        <div className="container py-12">
-          {filteredPlayers.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPlayers.map((player) => (
-                <Card
-                  key={player.id}
-                  className="cyber-border group hover:border-primary/50 transition-all duration-300"
-                >
-                  <CardContent className="p-6">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <h3 className="font-heading text-xl text-foreground mb-1">
-                          {player.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-2">
-                          {player.team}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="cyber-border-sm font-mono-cyber text-xs">
-                            {player.position}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {player.nationality}, {player.age} años
-                          </span>
-                        </div>
-                      </div>
-                      
-                      {/* Rating Badge */}
-                      <div className="flex flex-col items-center gap-1 px-4 py-3 bg-gradient-to-br from-muted/50 to-muted/30 rounded-lg border border-border">
-                        <Award className="w-5 h-5 text-accent" />
-                        <div className={`font-mono-cyber text-2xl font-bold ${getRatingColor(player.rating)}`}>
-                          {player.rating.toFixed(1)}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-3 gap-2 mb-4">
-                      <div className="p-3 bg-muted/30 rounded-lg text-center">
-                        <div className="font-mono-cyber text-xl font-bold text-primary">
-                          {player.goals}
-                        </div>
-                        <div className="text-xs text-muted-foreground">Goles</div>
-                      </div>
-                      <div className="p-3 bg-muted/30 rounded-lg text-center">
-                        <div className="font-mono-cyber text-xl font-bold text-secondary">
-                          {player.assists}
-                        </div>
-                        <div className="text-xs text-muted-foreground">Asist.</div>
-                      </div>
-                      <div className="p-3 bg-muted/30 rounded-lg text-center">
-                        <div className="font-mono-cyber text-xl font-bold text-accent">
-                          {player.matches}
-                        </div>
-                        <div className="text-xs text-muted-foreground">PJ</div>
-                      </div>
-                    </div>
-
-                    {/* Market Value */}
-                    <div className="p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg mb-4 text-center border border-primary/20">
-                      <div className="text-xs text-muted-foreground mb-1">Valor de Mercado</div>
-                      <div className="font-mono-cyber text-lg font-bold text-primary">
-                        {player.marketValue}
-                      </div>
-                    </div>
-
-                    {/* CTA */}
-                    <Link href={`/jugador/${player.id}`}>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full group/btn"
-                      >
-                        <span className="font-heading text-xs">VER PERFIL COMPLETO</span>
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+              </CardContent>
+            </Card>
           ) : (
-            <div className="text-center py-16">
-              <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-              <h3 className="font-heading text-xl text-foreground mb-2">
-                No se encontraron jugadores
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Intenta ajustar los filtros de búsqueda
-              </p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedTeam("Todos");
-                  setSelectedPosition("Todas");
-                  setSelectedNationality("Todas");
-                }}
-              >
-                Limpiar filtros
-              </Button>
-            </div>
+            <>
+              <div className="flex items-center justify-between mb-6">
+                <p className="text-sm text-muted-foreground">
+                  Mostrando {filteredPlayers.length} jugadores
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredPlayers.map((player) => (
+                  <Link key={player.id} href={`/jugador/${player.id}`}>
+                    <Card className="cyber-border group hover:border-primary/50 transition-all cursor-pointer h-full">
+                      <CardContent className="p-6">
+                        {/* Player Photo */}
+                        <div className="relative mb-4">
+                          <div className="aspect-square rounded-lg bg-muted overflow-hidden">
+                            {player.photo ? (
+                              <img
+                                src={player.photo}
+                                alt={player.name || 'Jugador'}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Users className="w-16 h-16 text-muted-foreground" />
+                              </div>
+                            )}
+                          </div>
+                          {player.goals !== null && player.goals > 0 && (
+                            <div className="absolute top-2 right-2 bg-background/90 backdrop-blur-sm rounded-full px-3 py-1 border border-border">
+                              <span className="text-lg font-bold text-primary">
+                                {player.goals}G
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Player Info */}
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                              {player.name || 'Sin nombre'}
+                            </h3>
+                            <p className="text-sm text-muted-foreground line-clamp-1">
+                              {player.team_name || 'Sin equipo'}
+                            </p>
+                          </div>
+
+                          {/* Badges */}
+                          <div className="flex flex-wrap gap-2">
+                            {player.position && (
+                              <Badge variant="outline" className={`${getPositionBadge(player.position)} border-current text-xs`}>
+                                {player.position}
+                              </Badge>
+                            )}
+                            {player.nationality && (
+                              <Badge variant="outline" className="border-border text-xs">
+                                {player.nationality}
+                              </Badge>
+                            )}
+                          </div>
+
+                          {/* Stats */}
+                          <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border">
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground">Goles</p>
+                              <p className="text-lg font-bold text-primary">{player.goals || 0}</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground">Asist.</p>
+                              <p className="text-lg font-bold text-secondary">{player.assists || 0}</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground">PJ</p>
+                              <p className="text-lg font-bold text-accent">{player.appearances || 0}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </main>

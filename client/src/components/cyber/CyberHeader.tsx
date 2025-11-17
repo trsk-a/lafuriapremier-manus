@@ -6,6 +6,7 @@ import { getLoginUrl } from "@/const";
 import { User, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { SearchBar } from "@/components/search/SearchBar";
 
 export function CyberHeader() {
   const { user, isAuthenticated } = useAuth();
@@ -40,9 +41,9 @@ export function CyberHeader() {
       <div className="h-1 bg-gradient-to-r from-primary via-secondary to-accent" />
       
       <div className="container">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
               <img 
                 src={APP_LOGO} 
                 alt="La Furia Premier" 
@@ -57,6 +58,11 @@ export function CyberHeader() {
                 </span>
               </div>
           </Link>
+
+          {/* Search Bar - Desktop */}
+          <div className="hidden lg:block flex-1 max-w-md">
+            <SearchBar />
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
@@ -141,6 +147,11 @@ export function CyberHeader() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-border">
+            {/* Search Bar - Mobile */}
+            <div className="px-4 mb-4">
+              <SearchBar />
+            </div>
+            
             <nav className="flex flex-col gap-2">
               {navItems.map((item) => (
                 <Link 
