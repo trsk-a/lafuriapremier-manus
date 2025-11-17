@@ -308,6 +308,228 @@ export const appRouter = router({
         return { success: true, tier: input.tier };
       }),
   }),
+
+  // ── Content Moderation (Supabase) ────────────────────────
+  moderation: router({
+    // Get content stats
+    stats: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+      }
+      
+      const supabaseDb = await import('./supabase-db');
+      return await supabaseDb.getContentStats();
+    }),
+
+    // Noticias
+    noticias: router({
+      list: protectedProcedure
+        .input(z.object({
+          status: z.enum(['draft', 'pending', 'published']).optional(),
+          limit: z.number().default(50),
+          offset: z.number().default(0),
+        }))
+        .query(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          return await supabaseDb.getNoticias(input);
+        }),
+
+      getById: protectedProcedure
+        .input(z.object({ id: z.number() }))
+        .query(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          return await supabaseDb.getNoticiaById(input.id);
+        }),
+
+      updateStatus: protectedProcedure
+        .input(z.object({
+          id: z.number(),
+          status: z.enum(['draft', 'pending', 'published']),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          await supabaseDb.updateNoticiaStatus(input.id, input.status, ctx.user.id.toString());
+          return { success: true };
+        }),
+
+      update: protectedProcedure
+        .input(z.object({
+          id: z.number(),
+          title: z.string().optional(),
+          summary: z.string().optional(),
+          content: z.string().optional(),
+          autor: z.string().optional(),
+          img: z.string().optional(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const { id, ...data } = input;
+          const supabaseDb = await import('./supabase-db');
+          await supabaseDb.updateNoticia(id, data);
+          return { success: true };
+        }),
+
+      delete: protectedProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          await supabaseDb.deleteNoticia(input.id);
+          return { success: true };
+        }),
+    }),
+
+    // Rumores
+    rumores: router({
+      list: protectedProcedure
+        .input(z.object({
+          status: z.enum(['draft', 'pending', 'published']).optional(),
+          limit: z.number().default(50),
+          offset: z.number().default(0),
+        }))
+        .query(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          return await supabaseDb.getRumores(input);
+        }),
+
+      getById: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .query(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          return await supabaseDb.getRumorById(input.id);
+        }),
+
+      updateStatus: protectedProcedure
+        .input(z.object({
+          id: z.string(),
+          status: z.enum(['draft', 'pending', 'published']),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          await supabaseDb.updateRumorStatus(input.id, input.status, ctx.user.id.toString());
+          return { success: true };
+        }),
+
+      update: protectedProcedure
+        .input(z.object({
+          id: z.string(),
+          titulo: z.string().optional(),
+          extracto: z.string().optional(),
+          cuerpo: z.string().optional(),
+          fuente: z.string().optional(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const { id, ...data } = input;
+          const supabaseDb = await import('./supabase-db');
+          await supabaseDb.updateRumor(id, data);
+          return { success: true };
+        }),
+
+      delete: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          await supabaseDb.deleteRumor(input.id);
+          return { success: true };
+        }),
+    }),
+
+    // Transfers (read-only for now)
+    transfers: router({
+      list: protectedProcedure
+        .input(z.object({
+          limit: z.number().default(50),
+          offset: z.number().default(0),
+          season: z.number().optional(),
+        }))
+        .query(async ({ input, ctx }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'Solo administradores' });
+          }
+          
+          const supabaseDb = await import('./supabase-db');
+          return await supabaseDb.getTransfers(input);
+        }),
+    }),
+  }),
+
+  // ── Public Content (Supabase) ─────────────────────────────
+  content: router({
+    noticias: publicProcedure
+      .input(z.object({
+        limit: z.number().default(20),
+        offset: z.number().default(0),
+      }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        return await supabaseDb.getNoticias({
+          status: 'published',
+          ...input,
+        });
+      }),
+
+    rumores: publicProcedure
+      .input(z.object({
+        limit: z.number().default(20),
+        offset: z.number().default(0),
+      }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        return await supabaseDb.getRumores({
+          status: 'published',
+          ...input,
+        });
+      }),
+
+    transfers: publicProcedure
+      .input(z.object({
+        limit: z.number().default(20),
+        offset: z.number().default(0),
+        season: z.number().optional(),
+      }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        return await supabaseDb.getTransfers(input);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

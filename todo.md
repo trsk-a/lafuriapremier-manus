@@ -209,3 +209,102 @@
 ## Ajustes de Panel de Admin
 - [x] Agregar link visible al panel de admin en el header para usuarios admin
 - [x] Verificar que el owner tenga automáticamente role='admin'
+
+## FASE 11: Migración a Supabase y Sistema de Moderación
+
+### Configuración de Supabase
+- [x] Solicitar credenciales de Supabase al usuario (SUPABASE_URL, SUPABASE_ANON_KEY, DATABASE_URL)
+- [x] Configurar variables de entorno de Supabase en el proyecto
+- [ ] Actualizar configuración de Drizzle para PostgreSQL
+- [ ] Documentar proceso de migración de schema a Supabase
+
+### Sistema de Estados de Publicación
+- [ ] Agregar campo `status` (enum: draft/pending/published) a tabla articles
+- [ ] Agregar campo `status` a tabla rumores
+- [ ] Agregar campo `status` a tabla fichajes
+- [ ] Agregar campo `status` a tabla tacticalAnalysis
+- [ ] Agregar campo `moderatedBy` (userId) y `moderatedAt` (timestamp) a todas las tablas de contenido
+- [ ] Migrar schema actualizado a Supabase
+
+### Routers y Lógica de Negocio
+- [ ] Actualizar router de articles para filtrar solo status='published' en queries públicas
+- [ ] Actualizar router de rumores para filtrar solo status='published' en queries públicas
+- [ ] Actualizar router de fichajes para filtrar solo status='published' en queries públicas
+- [ ] Crear procedimientos admin para listar contenido pendiente de moderación
+- [ ] Crear procedimientos admin para aprobar/rechazar/editar contenido
+
+### Panel de Administración - Moderación
+- [ ] Crear página /admin/moderation con tabs para cada tipo de contenido
+- [ ] Implementar tabla de artículos pendientes con filtros por status
+- [ ] Implementar tabla de rumores pendientes con filtros por status
+- [ ] Implementar tabla de fichajes pendientes con filtros por status
+- [ ] Implementar tabla de análisis tácticos pendientes con filtros por status
+- [ ] Agregar badges visuales de estado (draft=gris, pending=amarillo, published=verde)
+- [ ] Agregar acciones rápidas: Aprobar, Rechazar, Editar
+
+### Panel de Administración - CRUD de Artículos
+- [ ] Crear página /admin/articles con listado completo
+- [ ] Implementar formulario de creación de artículo
+- [ ] Implementar formulario de edición de artículo
+- [ ] Agregar editor markdown con preview en tiempo real
+- [ ] Implementar subida de imagen destacada a S3
+- [ ] Agregar sistema de tags/categorías
+- [ ] Implementar selector de tier (FREE/PRO/PREMIUM)
+- [ ] Agregar campo de autor y fecha de publicación
+- [ ] Implementar eliminación de artículos con confirmación
+
+### Panel de Administración - CRUD de Rumores
+- [ ] Crear página /admin/rumores con listado completo
+- [ ] Implementar formulario de creación de rumor
+- [ ] Implementar formulario de edición de rumor
+- [ ] Agregar selector de categoría (fichaje/renovación/salida)
+- [ ] Agregar selector de confiabilidad (1-5 estrellas)
+- [ ] Agregar selector de "heat level" (frío/tibio/caliente)
+- [ ] Implementar eliminación de rumores con confirmación
+
+### Panel de Administración - CRUD de Fichajes
+- [ ] Crear página /admin/fichajes con listado completo
+- [ ] Implementar formulario de creación de fichaje
+- [ ] Implementar formulario de edición de fichaje
+- [ ] Agregar campos: jugador, equipoOrigen, equipoDestino, monto, tipo
+- [ ] Agregar selector de estado (rumor/confirmado/oficial)
+- [ ] Implementar eliminación de fichajes con confirmación
+
+### Actualización de Páginas Públicas
+- [ ] Actualizar página Home para mostrar solo artículos published
+- [ ] Actualizar página Rumores para mostrar solo rumores published
+- [ ] Actualizar página Fichajes para mostrar solo fichajes published
+- [ ] Actualizar página Análisis Táctico para mostrar solo análisis published
+- [ ] Agregar mensaje informativo cuando no hay contenido publicado
+
+### Testing y Documentación
+- [ ] Probar flujo completo: contenido automático → moderación → publicación
+- [ ] Verificar que contenido draft/pending no sea visible públicamente
+- [ ] Documentar proceso de conexión de automatizaciones a Supabase
+- [ ] Crear guía de uso del panel de moderación
+
+
+## PROGRESO FASE 11 - Completado
+
+### ✅ Tareas Completadas
+- [x] Conexión exitosa con Supabase a través de MCP
+- [x] Creado enum `content_status` (draft/pending/published) en Supabase
+- [x] Agregado campo `status` a tabla `noticias` con default 'pending'
+- [x] Agregado campo `status` a tabla `rumores` con default 'pending'
+- [x] Agregados campos `moderated_by` y `moderated_at` para tracking
+- [x] Creados índices para optimizar consultas por status
+- [x] Creado helper `supabase-db.ts` con funciones CRUD para noticias y rumores
+- [x] Implementados routers tRPC de moderación (solo admin)
+- [x] Implementados routers tRPC públicos (solo contenido published)
+- [x] Creada página `/admin/moderacion` con tabs para Noticias y Rumores
+- [x] Implementada tabla de contenido pendiente con acciones
+- [x] Implementados modales de edición y visualización
+- [x] Implementadas acciones: Aprobar, Rechazar, Editar, Eliminar
+- [x] Agregadas estadísticas de moderación en dashboard
+- [x] Agregada ruta en App.tsx
+
+### 📝 Notas Importantes
+- El contenido insertado automáticamente en Supabase tendrá `status='pending'` por default
+- Solo el contenido con `status='published'` se mostrará en las páginas públicas
+- Los administradores pueden editar el contenido antes de aprobarlo
+- El sistema registra quién y cuándo moderó cada pieza de contenido
