@@ -444,3 +444,13 @@
 - [ ] Confirmar que RumorCard se muestra en /rumores
 - [ ] Verificar efectos neón y animaciones glitch
 - [ ] Hacer hard refresh del navegador para limpiar caché
+
+
+## CORRECCIONES URGENTES (Reportadas por Usuario)
+
+- [x] Publicar noticias REALES de El Ruso en lugar de The Guardian
+- [x] Publicar 10 rumores reales
+- [x] Eliminar fotos oficiales de jugadores (usar placeholders o ilustraciones estilo Greg Capullo)
+- [ ] Verificar que panel de moderación muestre las noticias pendientes correctamente
+- [ ] Corregir mapeo de campos en routers (noticias usa 'title', rumores usa 'titulo')
+- [ ] Asegurar que NO se enlace a URLs externas en noticias (deben abrir detalle interno)

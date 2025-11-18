@@ -14,10 +14,26 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { data: todaysMatches, isLoading: matchLoading } = trpc.matches.todaysMatches.useQuery();
-  // TODO: Migrar a usar content.noticias en lugar de articles
-  // const { data: articles } = trpc.articles.list.useQuery({ limit: 6 });
-  const articles: any[] = [];
-  const articlesLoading = false;
+  
+  // Cargar noticias desde Supabase
+  const { data: noticias = [], isLoading: noticiasLoading } = trpc.content.noticias.useQuery({ 
+    limit: 6, 
+    offset: 0 
+  });
+  
+  // Mapear noticias a formato de articles para compatibilidad con UI
+  const articles = noticias.map(n => ({
+    id: n.id,
+    title: n.title || '',
+    excerpt: n.summary || undefined,
+    featuredImage: n.img || undefined,
+    category: n.source || 'Noticias',
+    author: n.autor || 'Redacción',
+    authorName: n.autor || 'Redacción',
+    slug: n.id.toString(),
+    accessTier: 'FREE' as const
+  }));
+  const articlesLoading = noticiasLoading;
   
   const subscribeNewsletter = trpc.newsletter.subscribe.useMutation({
     onSuccess: () => {

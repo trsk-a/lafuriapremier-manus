@@ -264,20 +264,12 @@ export default function Jugadores() {
                   <Link key={player.id} href={`/jugador/${player.id}`}>
                     <Card className="cyber-border group hover:border-primary/50 transition-all cursor-pointer h-full">
                       <CardContent className="p-6">
-                        {/* Player Photo */}
+                        {/* Player Photo - NO usar fotos oficiales */}
                         <div className="relative mb-4">
-                          <div className="aspect-square rounded-lg bg-muted overflow-hidden">
-                            {player.photo ? (
-                              <img
-                                src={player.photo}
-                                alt={player.name || 'Jugador'}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <Users className="w-16 h-16 text-muted-foreground" />
-                              </div>
-                            )}
+                          <div className="aspect-square rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden border border-primary/30">
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Users className="w-16 h-16 text-primary/50" />
+                            </div>
                           </div>
                           {player.goals !== null && player.goals > 0 && (
                             <div className="absolute top-2 right-2 bg-background/90 backdrop-blur-sm rounded-full px-3 py-1 border border-border">
