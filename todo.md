@@ -470,3 +470,13 @@
 - [x] Cambiar fondo negro → gris carbón según imagen de referencia
 - [x] Crear repositorio GitHub lafuriapremier-manus y hacer push
   * URL: https://github.com/trsk-a/lafuriapremier-manus
+
+
+## CORRECCIONES URGENTES (Cambios no aplicados)
+
+- [x] Verificar por qué fondo sigue negro (bg-black en páginas individuales)
+- [x] Eliminar TODAS las imágenes de noticias (imageUrl=undefined)
+- [x] Cambiar formato de noticias a lista simple (no cards grandes)
+- [x] Implementar página /admin/moderacion
+- [x] Implementar página /jornadas (ya existía)
+- [x] Implementar página /noticia/[id]

@@ -76,8 +76,7 @@ export function NewsCard({
 
           {/* Content Section */}
           <div className={cn(
-            "relative p-6 space-y-3",
-            imageUrl && "absolute bottom-0 left-0 right-0"
+            "relative p-6 space-y-3"
           )}>
             {/* Title */}
             <h3 className={cn(

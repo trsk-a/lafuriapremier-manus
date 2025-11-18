@@ -44,7 +44,7 @@ export default function Noticias() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <CyberHeader />
       
       <main className="container mx-auto px-4 py-12">
@@ -110,27 +110,28 @@ export default function Noticias() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {noticias.map((noticia, index) => {
-              const isHighlight = index === 0;
-              
-              return (
-                <NewsCard
-                  key={noticia.id}
-                  title={noticia.title || 'Sin título'}
-                  excerpt={noticia.summary || undefined}
-                  imageUrl={noticia.img || undefined}
-                  category={noticia.source || undefined}
-                  date={noticia.published ? formatDate(noticia.published) : 'Sin fecha'}
-                  featured={isHighlight}
-                  onClick={() => {
-                    if (noticia.url) {
-                      window.open(noticia.url, '_blank', 'noopener,noreferrer');
-                    }
-                  }}
-                />
-              );
-            })}
+          <div className="space-y-8">
+            {noticias.map((noticia) => (
+              <article 
+                key={noticia.id} 
+                className="border-b border-border/30 pb-8 last:border-0 hover:bg-card/30 transition-colors rounded-lg p-4 -mx-4 cursor-pointer"
+                onClick={() => window.location.href = `/noticia/${noticia.id}`}
+              >
+                <h2 className="text-2xl font-heading font-bold text-foreground mb-3 hover:text-primary transition-colors">
+                  {noticia.title || 'Sin título'}
+                </h2>
+                <p className="text-muted-foreground mb-4 leading-relaxed">
+                  {noticia.summary || 'Sin resumen disponible'}
+                </p>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span className="text-primary font-medium">{noticia.autor || 'El Ruso'}</span>
+                  <span>•</span>
+                  <span>{noticia.source || 'The Guardian'}</span>
+                  <span>•</span>
+                  <span>{noticia.published ? formatDate(noticia.published) : 'Sin fecha'}</span>
+                </div>
+              </article>
+            ))}
           </div>
         )}
 

@@ -17,6 +17,8 @@ import Jugadores from "./pages/Jugadores";
 import PlayerProfile from "./pages/PlayerProfile";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminModeration from "./pages/admin/Moderation";
+import NoticiaDetalle from "./pages/NoticiaDetalle";
+import Moderacion from "./pages/admin/Moderacion";
 import AnalisisTactico from "./pages/AnalisisTactico";
 
 function Router() {
@@ -28,13 +30,14 @@ function Router() {
       <Route path={"/planes"} component={Planes} />
       <Route path={"/rumores"} component={Rumores} />
       <Route path={"/noticias"} component={Noticias} />
+      <Route path={"/noticia/:id"} component={NoticiaDetalle} />
       <Route path={"/fichajes"} component={Fichajes} />
       <Route path={"/radar-latino"} component={RadarLatino} />
       <Route path={"/talento-iberico"} component={TalentoIberico} />
       <Route path={"/jugadores"} component={Jugadores} />
       <Route path={"/jugador/:id"} component={PlayerProfile} />
       <Route path={"/admin"} component={AdminDashboard} />
-      <Route path={"/admin/moderacion"} component={AdminModeration} />
+      <Route path={"/admin/moderacion"} component={Moderacion} />
       <Route path={"/analisis-tactico"} component={AnalisisTactico} />
       <Route path={"/404"} component={NotFound} />
       {/* TODO: Add more routes here */}

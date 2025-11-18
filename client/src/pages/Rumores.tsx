@@ -47,7 +47,7 @@ export default function Rumores() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <CyberHeader />
       
       <main className="container mx-auto px-4 py-12">
