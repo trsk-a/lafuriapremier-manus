@@ -1,4 +1,5 @@
 import { trpc } from "@/lib/trpc";
+import type { Match } from "@shared/types";
 import { CyberHeader } from "@/components/cyber/CyberHeader";
 import { CyberFooter } from "@/components/cyber/CyberFooter";
 import { MatchHero } from "@/components/cyber/MatchHero";
@@ -13,7 +14,45 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { data: todaysMatches, isLoading: matchLoading } = trpc.matches.todaysMatches.useQuery();
+  // Cargar próximos partidos desde Supabase
+  const { data: upcomingFixtures = [], isLoading: matchLoading } = trpc.matches.upcomingFromSupabase.useQuery({ limit: 5 });
+  
+  // Mapear fixtures a formato Match para compatibilidad con MatchHero
+  const todaysMatches: Match[] = upcomingFixtures.map(f => ({
+    fixture: {
+      id: f.fixture_id || 0,
+      date: f.match_date ? new Date(f.match_date).toISOString() : new Date().toISOString(),
+      status: {
+        short: f.status || 'NS',
+        long: f.status === 'NS' ? 'Not Started' : 'Unknown',
+        elapsed: null
+      },
+      venue: {
+        name: f.venue,
+        city: null
+      }
+    },
+    league: {
+      id: 39,
+      name: 'Premier League',
+      season: f.season || 2025,
+      round: f.round || undefined
+    },
+    teams: {
+      home: { id: 0, name: f.home_team || 'TBD', logo: '' },
+      away: { id: 0, name: f.away_team || 'TBD', logo: '' }
+    },
+    goals: {
+      home: f.home_score,
+      away: f.away_score
+    },
+    score: {
+      halftime: { home: null, away: null },
+      fulltime: { home: f.home_score, away: f.away_score },
+      extratime: null,
+      penalty: null
+    }
+  }));
   
   // Cargar noticias desde Supabase
   const { data: noticias = [], isLoading: noticiasLoading } = trpc.content.noticias.useQuery({ 
@@ -188,28 +227,12 @@ export default function Home() {
                 ))}
               </div>
             ) : articles && articles.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="space-y-4">
                 {articles.map((article) => (
-                  <Link key={article.id} href={`/articulo/${article.slug}`}>
+                  <Link key={article.id} href={`/noticia/${article.id}`}>
                     <a className="group">
-                      <Card className="overflow-hidden border-border hover:border-secondary transition-all duration-300 cyber-border h-full">
-                        {article.featuredImage && (
-                          <div className="relative h-48 overflow-hidden">
-                            <img
-                              src={article.featuredImage}
-                              alt={article.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent" />
-                            {article.accessTier !== "FREE" && (
-                              <div className="absolute top-2 right-2 px-3 py-1 bg-accent/90 backdrop-blur-sm rounded-full">
-                                <span className="text-xs font-heading tracking-wide text-accent-foreground">
-                                  {article.accessTier}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                      <Card className="overflow-hidden border-border hover:border-primary/50 transition-all duration-300 cyber-border">
+                        {/* Sin imágenes */}
                         <CardContent className="p-6">
                           <div className="flex items-center gap-2 mb-3">
                             <span className="text-xs font-heading tracking-wide text-primary">

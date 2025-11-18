@@ -84,16 +84,16 @@ export function SearchBar({ className, onSearch, autoFocus = false }: SearchBarP
   return (
     <div ref={containerRef} className={cn("relative", className)}>
       <form onSubmit={handleSubmit} className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           ref={inputRef}
           type="text"
-          placeholder="Buscar noticias, rumores, jugadores..."
+          placeholder="Buscar..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
           autoFocus={autoFocus}
-          className="pl-10 pr-10 cyber-border bg-card/50 backdrop-blur-sm"
+          className="pl-11 pr-10 h-10 bg-background/50 border-border/50 hover:border-primary/50 focus:border-primary transition-colors rounded-full"
         />
         {query && (
           <Button

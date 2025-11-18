@@ -58,7 +58,7 @@ export default function Rumores() {
             <div className="flex items-center gap-3 mb-4">
               <Flame className="w-8 h-8 text-red-500" />
               <h1 className="text-5xl font-black">
-                MERCADO DE <span className="text-red-500">FICHAJES</span>
+                <span className="text-red-500">RUMORES</span> DE FICHAJES
               </h1>
             </div>
             <p className="text-xl text-gray-400 max-w-3xl">

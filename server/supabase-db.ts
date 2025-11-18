@@ -633,3 +633,73 @@ export async function getJugadorById(id: number) {
     return null;
   }
 }
+
+// ── Fixtures (Partidos) ──────────────────────────────────
+
+export interface Fixture {
+  fixture_id: number;
+  home_team: string | null;
+  away_team: string | null;
+  match_date: Date | null;
+  venue: string | null;
+  status: string | null;
+  home_score: number | null;
+  away_score: number | null;
+  round: string | null;
+  referee: string | null;
+  season: number | null;
+  is_live: boolean | null;
+  is_finished: boolean | null;
+}
+
+export async function getUpcomingFixtures(limit: number = 10) {
+  const sql = getSupabaseSql();
+  if (!sql) return [];
+
+  try {
+    const result = await sql<Fixture[]>`
+      SELECT * FROM fixtures 
+      WHERE match_date > NOW() 
+      ORDER BY match_date ASC 
+      LIMIT ${limit}
+    `;
+    return result;
+  } catch (error) {
+    console.error('[Supabase] Error fetching upcoming fixtures:', error);
+    return [];
+  }
+}
+
+export async function getFixturesByRound(round: string) {
+  const sql = getSupabaseSql();
+  if (!sql) return [];
+
+  try {
+    const result = await sql<Fixture[]>`
+      SELECT * FROM fixtures 
+      WHERE round = ${round}
+      ORDER BY match_date ASC
+    `;
+    return result;
+  } catch (error) {
+    console.error('[Supabase] Error fetching fixtures by round:', error);
+    return [];
+  }
+}
+
+export async function getAllRounds() {
+  const sql = getSupabaseSql();
+  if (!sql) return [];
+
+  try {
+    const result = await sql<{ round: string }[]>`
+      SELECT DISTINCT round FROM fixtures 
+      WHERE round IS NOT NULL 
+      ORDER BY round ASC
+    `;
+    return result.map(r => r.round);
+  } catch (error) {
+    console.error('[Supabase] Error fetching rounds:', error);
+    return [];
+  }
+}

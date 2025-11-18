@@ -91,6 +91,29 @@ export const appRouter = router({
           return [];
         }
       }),
+
+    // Cargar desde Supabase
+    upcomingFromSupabase: publicProcedure
+      .input(z.object({ limit: z.number().optional() }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        const fixtures = await supabaseDb.getUpcomingFixtures(input.limit || 10);
+        return fixtures;
+      }),
+
+    roundsFromSupabase: publicProcedure.query(async () => {
+      const supabaseDb = await import('./supabase-db');
+      const rounds = await supabaseDb.getAllRounds();
+      return rounds;
+    }),
+
+    fixturesByRoundFromSupabase: publicProcedure
+      .input(z.object({ round: z.string() }))
+      .query(async ({ input }) => {
+        const supabaseDb = await import('./supabase-db');
+        const fixtures = await supabaseDb.getFixturesByRound(input.round);
+        return fixtures;
+      }),
   }),
 
   // ── Articles ──────────────────────────────────────────────

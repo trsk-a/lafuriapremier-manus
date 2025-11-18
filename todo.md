@@ -454,3 +454,19 @@
 - [ ] Verificar que panel de moderación muestre las noticias pendientes correctamente
 - [ ] Corregir mapeo de campos en routers (noticias usa 'title', rumores usa 'titulo')
 - [ ] Asegurar que NO se enlace a URLs externas en noticias (deben abrir detalle interno)
+
+
+## AJUSTES FINALES SOLICITADOS
+
+- [ ] Verificar que Moderación aparezca en sidebar de admin
+- [x] Cambiar título "Mercado de Fichajes" → "Rumores" en página de rumores
+- [x] Agregar endpoints para cargar fixtures desde Supabase
+- [x] Mostrar próximos partidos desde Supabase con carrusel (ya existe en MatchHero)
+- [ ] Unificar cabeceras de todas las secciones (estilo Jornadas con icono y título)
+- [x] Rediseñar buscador más limpio con icono de lupa
+- [x] Eliminar imágenes de noticias
+- [x] Eliminar texto "LA FURIA PREMIER" del header (solo logo)
+- [x] Cambiar formato de noticias a estilo lista (como versión actual)
+- [x] Cambiar fondo negro → gris carbón según imagen de referencia
+- [x] Crear repositorio GitHub lafuriapremier-manus y hacer push
+  * URL: https://github.com/trsk-a/lafuriapremier-manus

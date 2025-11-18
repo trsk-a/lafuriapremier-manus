@@ -47,16 +47,8 @@ export function CyberHeader() {
               <img 
                 src={APP_LOGO} 
                 alt="La Furia Premier" 
-                className="h-10 w-auto transition-transform group-hover:scale-105"
+                className="h-12 w-auto transition-transform group-hover:scale-105"
               />
-              <div className="hidden md:flex flex-col">
-                <span className="font-heading text-lg leading-none text-foreground">
-                  LA FURIA
-                </span>
-                <span className="font-heading text-sm leading-none text-primary">
-                  PREMIER
-                </span>
-              </div>
           </Link>
 
           {/* Search Bar - Desktop */}
