@@ -18,6 +18,7 @@ import PlayerProfile from "./pages/PlayerProfile";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminModeration from "./pages/admin/Moderation";
 import NoticiaDetalle from "./pages/NoticiaDetalle";
+import RumorDetalle from "./pages/RumorDetalle";
 import Moderacion from "./pages/admin/Moderacion";
 import AnalisisTactico from "./pages/AnalisisTactico";
 
@@ -29,6 +30,7 @@ function Router() {
       <Route path={"/partido/:id"} component={MatchDetail} />
       <Route path={"/planes"} component={Planes} />
       <Route path={"/rumores"} component={Rumores} />
+      <Route path={"/rumor/:id"} component={RumorDetalle} />
       <Route path={"/noticias"} component={Noticias} />
       <Route path={"/noticia/:id"} component={NoticiaDetalle} />
       <Route path={"/fichajes"} component={Fichajes} />
