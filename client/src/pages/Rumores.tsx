@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { CyberHeader } from "@/components/cyber/CyberHeader";
 import { CyberFooter } from "@/components/cyber/CyberFooter";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +17,7 @@ import { trpc } from "@/lib/trpc";
 
 export default function Rumores() {
   const [limit, setLimit] = useState(20);
+  const [, setLocation] = useLocation();
   
   // Fetch rumores publicados desde Supabase
   const { data: rumores = [], isLoading } = trpc.content.rumores.useQuery({
@@ -131,7 +133,8 @@ export default function Rumores() {
             {rumores.map((rumor) => (
               <Card 
                 key={rumor.id} 
-                className="bg-gray-900/50 border-cyan-500/30 hover:border-cyan-500/60 transition-all group"
+                className="bg-gray-900/50 border-cyan-500/30 hover:border-cyan-500/60 transition-all group cursor-pointer"
+                onClick={() => setLocation(`/rumor/${rumor.id}`)}
               >
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row gap-6">

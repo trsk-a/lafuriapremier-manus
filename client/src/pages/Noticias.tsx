@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { CyberHeader } from "@/components/cyber/CyberHeader";
 import { CyberFooter } from "@/components/cyber/CyberFooter";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import { GlitchText } from "@/components/cyberpunk/GlitchText";
 
 export default function Noticias() {
   const [limit, setLimit] = useState(20);
+  const [, setLocation] = useLocation();
   
   // Fetch noticias publicadas desde Supabase
   const { data: noticias = [], isLoading } = trpc.content.noticias.useQuery({
@@ -115,7 +117,7 @@ export default function Noticias() {
               <article 
                 key={noticia.id} 
                 className="border-b border-border/30 pb-8 last:border-0 hover:bg-card/30 transition-colors rounded-lg p-4 -mx-4 cursor-pointer"
-                onClick={() => window.location.href = `/noticia/${noticia.id}`}
+                onClick={() => setLocation(`/noticia/${noticia.id}`)}
               >
                 <h2 className="text-2xl font-heading font-bold text-foreground mb-3 hover:text-primary transition-colors">
                   {noticia.title || 'Sin título'}
