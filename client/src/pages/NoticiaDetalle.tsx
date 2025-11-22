@@ -2,7 +2,7 @@ import { useRoute } from "wouter";
 import { CyberHeader } from "@/components/cyber/CyberHeader";
 import { CyberFooter } from "@/components/cyber/CyberFooter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, User, ExternalLink, Loader2, FileText } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
@@ -13,13 +13,13 @@ export default function NoticiaDetalle() {
   const [, setLocation] = useLocation();
   const noticiaId = params?.id ? parseInt(params.id) : null;
 
-  // Cargar todas las noticias publicadas
-  const { data: noticias, isLoading, error } = trpc.content.noticias.useQuery(
-    { limit: 100, offset: 0 },
-    { enabled: !!noticiaId }
+  const { data: noticia, isLoading, error } = trpc.content.noticias.useQuery(
+    { limit: 1, offset: 0 },
+    { 
+      enabled: !!noticiaId,
+      select: (data) => data.find((n: any) => n.id === noticiaId)
+    }
   );
-
-  const noticia = noticias?.find((n: any) => n.id === noticiaId);
 
   const formatDate = (date: Date | string | null) => {
     if (!date) return "Sin fecha";
@@ -86,10 +86,8 @@ export default function NoticiaDetalle() {
           Volver a Noticias
         </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <article>
+        {/* Article */}
+        <article className="max-w-4xl mx-auto">
           <Card className="overflow-hidden cyber-border">
             <CardContent className="p-8 md:p-12">
               {/* Title */}
@@ -157,55 +155,7 @@ export default function NoticiaDetalle() {
               )}
             </CardContent>
           </Card>
-            </article>
-          </div>
-
-          {/* Sidebar - Otras Noticias */}
-          <aside className="lg:col-span-1">
-            <Card className="cyber-border sticky top-24">
-              <CardHeader>
-                <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-primary" />
-                  Otras Noticias
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {noticias && noticias.length > 0 ? (
-                  noticias
-                    .filter((n: any) => n.id !== noticiaId)
-                    .slice(0, 4)
-                    .map((n: any) => (
-                      <button
-                        key={n.id}
-                        onClick={() => setLocation(`/noticia/${n.id}`)}
-                        className="w-full text-left p-4 rounded-lg bg-card/50 hover:bg-card transition-colors border border-border hover:border-primary group"
-                      >
-                        <h3 className="font-bold text-sm mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                          {n.title}
-                        </h3>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Calendar className="w-3 h-3" />
-                          <span>{formatDate(n.published)}</span>
-                        </div>
-                      </button>
-                    ))
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No hay más noticias disponibles
-                  </p>
-                )}
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full cyber-border"
-                  onClick={() => setLocation("/noticias")}
-                >
-                  Ver todas las noticias
-                </Button>
-              </CardContent>
-            </Card>
-          </aside>
-        </div>
+        </article>
       </main>
 
       <CyberFooter />

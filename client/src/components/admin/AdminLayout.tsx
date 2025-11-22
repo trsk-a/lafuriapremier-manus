@@ -12,7 +12,6 @@ import {
   Menu,
   X,
   Trophy,
-  Shield,
 } from "lucide-react";
 import { Link, useLocation, Redirect } from "wouter";
 import { useState } from "react";
@@ -23,7 +22,6 @@ interface AdminLayoutProps {
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { name: "Moderación", href: "/admin/moderacion", icon: Shield },
   { name: "Artículos", href: "/admin/articles", icon: FileText },
   { name: "Rumores", href: "/admin/rumores", icon: TrendingUp },
   { name: "Fichajes", href: "/admin/fichajes", icon: Trophy },
