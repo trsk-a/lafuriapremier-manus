@@ -3,22 +3,21 @@ import { CyberHeader } from "@/components/cyber/CyberHeader";
 import { CyberFooter } from "@/components/cyber/CyberFooter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Calendar, User, ExternalLink, Loader2, FileText } from "lucide-react";
+import { ArrowLeft, Calendar, ExternalLink, Loader2, TrendingUp } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
-import { GlitchText } from "@/components/cyberpunk/GlitchText";
 
-export default function NoticiaDetalle() {
-  const [, params] = useRoute("/noticia/:id");
+export default function RumorDetalle() {
+  const [, params] = useRoute("/rumor/:id");
   const [, setLocation] = useLocation();
-  const noticiaId = params?.id ? parseInt(params.id) : null;
+  const rumorId = params?.id;
 
-  const { data: noticias, isLoading, error } = trpc.content.noticias.useQuery(
+  const { data: rumores, isLoading, error } = trpc.content.rumores.useQuery(
     { limit: 100, offset: 0 },
-    { enabled: !!noticiaId }
+    { enabled: !!rumorId }
   );
 
-  const noticia = noticias?.find((n: any) => n.id === noticiaId);
+  const rumor = rumores?.find((r: any) => r.id === rumorId);
 
   const formatDate = (date: Date | string | null) => {
     if (!date) return "Sin fecha";
@@ -44,23 +43,23 @@ export default function NoticiaDetalle() {
     );
   }
 
-  if (error || !noticia) {
+  if (error || !rumor) {
     return (
       <div className="min-h-screen bg-background">
         <CyberHeader />
         <div className="container py-20">
           <Card>
             <CardContent className="p-12 text-center">
-              <FileText className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+              <TrendingUp className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-muted-foreground mb-2">
-                Noticia no encontrada
+                Rumor no encontrado
               </h2>
               <p className="text-muted-foreground mb-6">
-                La noticia que buscas no existe o ha sido eliminada
+                El rumor que buscas no existe o ha sido eliminado
               </p>
-              <Button onClick={() => setLocation("/noticias")}>
+              <Button onClick={() => setLocation("/rumores")}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Volver a Noticias
+                Volver a Rumores
               </Button>
             </CardContent>
           </Card>
@@ -78,11 +77,11 @@ export default function NoticiaDetalle() {
         {/* Back Button */}
         <Button 
           variant="ghost" 
-          onClick={() => setLocation("/noticias")}
+          onClick={() => setLocation("/rumores")}
           className="mb-8"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver a Noticias
+          Volver a Rumores
         </Button>
 
         {/* Article */}
@@ -91,41 +90,35 @@ export default function NoticiaDetalle() {
             <CardContent className="p-8 md:p-12">
               {/* Title */}
               <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
-                {noticia.title}
+                {rumor.titulo}
               </h1>
 
               {/* Meta Info */}
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8 pb-8 border-b border-border">
                 <div className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  <span className="text-primary font-medium">{noticia.autor || "El Ruso"}</span>
+                  <Calendar className="w-4 h-4" />
+                  <span>{formatDate(rumor.publicado_en)}</span>
                 </div>
                 <span>•</span>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>{formatDate(noticia.published)}</span>
+                  <ExternalLink className="w-4 h-4" />
+                  <span>{rumor.fuente}</span>
                 </div>
-                {noticia.source && (
-                  <>
-                    <span>•</span>
-                    <span>{noticia.source}</span>
-                  </>
-                )}
               </div>
 
               {/* Summary */}
-              {noticia.summary && (
+              {rumor.extracto && (
                 <div className="text-xl text-muted-foreground leading-relaxed mb-8 p-6 bg-card/50 rounded-lg border-l-4 border-primary">
-                  {noticia.summary}
+                  {rumor.extracto}
                 </div>
               )}
 
               {/* Content */}
               <div className="prose prose-invert max-w-none">
-                {noticia.content ? (
+                {rumor.cuerpo ? (
                   <div 
                     className="text-foreground leading-relaxed space-y-4"
-                    dangerouslySetInnerHTML={{ __html: noticia.content.replace(/\n/g, '<br />') }}
+                    dangerouslySetInnerHTML={{ __html: rumor.cuerpo.replace(/\n/g, '<br />') }}
                   />
                 ) : (
                   <p className="text-muted-foreground italic">
@@ -135,10 +128,10 @@ export default function NoticiaDetalle() {
               </div>
 
               {/* Source Link */}
-              {noticia.url && (
+              {rumor.url && (
                 <div className="mt-12 pt-8 border-t border-border">
                   <a 
-                    href={noticia.url} 
+                    href={rumor.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
