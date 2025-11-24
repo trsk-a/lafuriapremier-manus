@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
-import { Check, X, Eye, Loader2, FileText, Flame } from "lucide-react";
+import { Check, X, Eye, Loader2, FileText, Flame, Edit } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Moderacion() {
@@ -164,6 +164,14 @@ export default function Moderacion() {
                         <Button
                           size="sm"
                           variant="outline"
+                          onClick={() => toast.info("Funcionalidad de edición próximamente")}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => window.open(`/noticia/${noticia.id}`, '_blank')}
                         >
                           <Eye className="w-4 h-4 mr-2" />
@@ -239,6 +247,14 @@ export default function Moderacion() {
                         >
                           <X className="w-4 h-4 mr-2" />
                           Rechazar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => toast.info("Funcionalidad de edición próximamente")}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Editar
                         </Button>
                         <Button
                           size="sm"
