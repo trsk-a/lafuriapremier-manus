@@ -4,12 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { Check, X, Eye, Loader2, FileText, Flame, Edit } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Moderacion() {
   const [activeTab, setActiveTab] = useState<"noticias" | "rumores">("noticias");
+  const [editingNoticia, setEditingNoticia] = useState<any>(null);
+  const [editingRumor, setEditingRumor] = useState<any>(null);
   const utils = trpc.useUtils();
 
   // Fetch pending noticias
@@ -67,6 +73,30 @@ export default function Moderacion() {
     },
     onError: (error: any) => {
       toast.error(`Error al rechazar: ${error.message}`);
+    },
+  });
+
+  // Mutation para actualizar noticia
+  const updateNoticiaMutation = trpc.moderation.noticias.update.useMutation({
+    onSuccess: () => {
+      toast.success("Noticia actualizada correctamente");
+      utils.moderation.noticias.list.invalidate();
+      setEditingNoticia(null);
+    },
+    onError: (error: any) => {
+      toast.error(`Error al actualizar: ${error.message}`);
+    },
+  });
+
+  // Mutation para actualizar rumor
+  const updateRumorMutation = trpc.moderation.rumores.update.useMutation({
+    onSuccess: () => {
+      toast.success("Rumor actualizado correctamente");
+      utils.moderation.rumores.list.invalidate();
+      setEditingRumor(null);
+    },
+    onError: (error: any) => {
+      toast.error(`Error al actualizar: ${error.message}`);
     },
   });
 

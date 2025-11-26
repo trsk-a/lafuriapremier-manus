@@ -34,7 +34,8 @@ interface Player {
 export default function RadarLatino() {
   const { user, isAuthenticated } = useAuth();
   const userTier = user?.subscriptionTier || 'FREE';
-  const hasAccess = userTier === 'PRO' || userTier === 'PREMIUM';
+  const isAdmin = user?.role === 'admin';
+  const hasAccess = isAdmin || userTier === 'PRO' || userTier === 'PREMIUM';
 
   // Mock data para demostración
   const mockPlayers: Player[] = [
