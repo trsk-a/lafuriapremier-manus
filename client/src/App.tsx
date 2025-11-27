@@ -21,6 +21,7 @@ import NoticiaDetalle from "./pages/NoticiaDetalle";
 import RumorDetalle from "./pages/RumorDetalle";
 import Moderacion from "./pages/admin/Moderacion";
 import AnalisisTactico from "./pages/AnalisisTactico";
+import AnalisisJugador from "./pages/AnalisisJugador";
 
 function Router() {
   return (
@@ -41,6 +42,7 @@ function Router() {
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/admin/moderacion"} component={Moderacion} />
       <Route path={"/analisis-tactico"} component={AnalisisTactico} />
+      <Route path={"/analisis-jugador/:id"} component={AnalisisJugador} />
       <Route path={"/404"} component={NotFound} />
       {/* TODO: Add more routes here */}
       <Route component={NotFound} />

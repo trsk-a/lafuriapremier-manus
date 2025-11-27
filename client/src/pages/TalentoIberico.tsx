@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 interface Player {
   id: string;
@@ -33,6 +33,7 @@ interface Player {
 
 export default function TalentoIberico() {
   const { user, isAuthenticated } = useAuth();
+  const [, navigate] = useLocation();
   const userTier = user?.subscriptionTier || 'FREE';
   const isAdmin = user?.role === 'admin';
   const hasAccess = isAdmin || userTier === 'PRO' || userTier === 'PREMIUM';
@@ -298,15 +299,16 @@ export default function TalentoIberico() {
                         </div>
                       </div>
 
-                      {/* CTA */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full group/btn"
-                      >
-                        <span className="font-heading text-xs">VER ANÁLISIS COMPLETO</span>
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                      </Button>
+                  {/* CTA */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full group/btn"
+                    onClick={() => navigate(`/analisis-jugador/${player.id}`)}
+                  >
+                    <span className="font-heading text-xs">VER ANÁLISIS COMPLETO</span>
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
                     </div>
 
                     {/* Right: Stats Panel */}
